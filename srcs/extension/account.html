@@ -1,0 +1,9 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>个人首页 · 信息源配置</title><link rel="stylesheet" href="account.css"></head><body><main>
+<header><p>ZJUers / PERSONAL HOME</p><h1>信息源配置</h1><p>配置保存在此设备的扩展中。保存后返回起始页即可加载。</p></header>
+<section><h2>浙大统一身份认证</h2><p>保存学号和密码后，扩展可在浏览器重启后自动登录。具有本机扩展数据访问权的人可能读取这些凭据；不会同步或导出。</p>
+<form id="campusForm"><label>学号<input id="username" autocomplete="username" required maxlength="100"></label><label>密码<input id="password" type="password" autocomplete="current-password" required maxlength="512"></label><button>保存并连接</button></form>
+<div class="actions"><button id="login">重新连接</button><a href="https://zjuam.zju.edu.cn/cas/login" target="_blank" rel="noopener noreferrer">打开统一身份认证</a><a href="https://zdbk.zju.edu.cn/" target="_blank" rel="noopener noreferrer">本科系统</a><a href="https://courses.zju.edu.cn/" target="_blank" rel="noopener noreferrer">学在浙大</a><button id="logout">退出并清除凭据</button></div><output id="campusStatus" aria-live="polite"></output></section>
+<section><h2>和风天气</h2><form id="weatherForm"><label>专属 API Host<input id="host" placeholder="xxx.qweatherapi.com" required autocomplete="off"></label><label>API Key<input id="key" type="password" placeholder="已保存时留空可保留" autocomplete="off"></label><button>保存天气凭据</button></form>
+<form id="cityForm"><label>搜索城市或区县<input id="city" placeholder="例如：杭州 西湖" required></label><button>查询地点</button></form><div id="locations" class="actions"></div><p id="selectedLocation"></p><button id="clearWeather">清除天气配置</button><output id="weatherStatus" aria-live="polite"></output></section>
+<footer><a href="https://zjuers.com/" target="_blank" rel="noopener noreferrer">打开起始页</a> · <a href="diagnostics.html">加载诊断</a></footer>
+</main><script src="account.js"></script></body></html>

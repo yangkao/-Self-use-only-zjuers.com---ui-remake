@@ -1,0 +1,48 @@
+<div class="app">
+  <div class="wallpaper" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="metadata"></video>
+    <div class="wallpaper-shade"></div>
+  </div>
+
+  <div class="greeting" id="greeting" aria-live="polite">晚上好，Yangkao</div>
+
+  <header class="topbar">
+    <div class="topbar-caption"><img alt="">ZJUers <span>轻首页</span></div>
+    <div class="header-line">
+      <div class="clock-wrap"><time id="clock">09<span class="time-separator">:</span>41</time><span id="date">1st<span class="date-separator">/</span>Oct</span><button class="freshman-guide preview-control" type="button" aria-label="2026新生宝典，打开入口"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5c3-1 6-1 9 1 3-2 6-2 9-1v14c-3-1-6-1-9 1-3-2-6-2-9-1V5ZM12 6v14M6 9h3M15 9h3"/></svg><span>2026新生宝典</span></button></div>
+      <div class="search-shell preview-control">
+        <button class="engine-button" id="engineButton" aria-label="切换搜索引擎：Bing" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
+        <input id="searchInput" type="search" aria-label="搜索内容" placeholder="搜索" autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="清除搜索内容" hidden>×</button>
+        <button class="search-submit" id="searchSubmit" aria-label="搜索" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
+        <div class="engine-menu" id="engineMenu" aria-label="搜索引擎" hidden></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-view" id="mainView">
+    <div class="main-inner">
+      <div id="navigation"></div>
+    </div>
+  </main>
+
+  <section class="secondary-view" id="secondaryView" aria-label="今日概览" aria-hidden="true">
+    <div class="secondary-inner">
+      <div class="secondary-heading"><div><div class="eyebrow">YOUR DAY / 今日概览</div><h1>名句等待加载</h1></div><button class="settings-trigger preview-control" id="settingsTrigger" aria-label="打开设置"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2h4l.6 3 1.7 1 2.8-1 2 3.4-2.3 2v2l2.3 2-2 3.4-2.8-1-1.7 1L14 21h-4l-.6-3.2-1.7-1-2.8 1-2-3.4 2.3-2v-2l-2.3-2 2-3.4 2.8 1 1.7-1L10 2Z"/><circle cx="12" cy="11.5" r="3"/></svg></button></div>
+      <div class="dashboard-grid">
+        <article class="info-card weather-card preview-control"><div class="card-top"><span class="eyebrow">WEATHER / 天气</span></div><p class="empty-state">正在初始化真实数据界面…</p></article>
+        <article class="info-card schedule-card preview-control"><div class="card-top"><span class="eyebrow">SCHEDULE / 今日课表</span></div><p class="empty-state">正在初始化真实数据界面…</p></article>
+        <article class="info-card exam-card preview-control"><div class="card-top"><span class="eyebrow">EXAMS / 近期考试</span></div><p class="empty-state">正在初始化真实数据界面…</p></article>
+        <article class="info-card assignments-card preview-control"><div class="card-top"><span class="eyebrow">COURSES / 学在浙大</span></div><p class="empty-state">正在初始化真实数据界面…</p></article>
+      </div>
+    </div>
+  </section>
+
+  <div class="settings-backdrop" id="settingsBackdrop" hidden></div>
+  <aside class="settings-panel" id="settingsPanel" aria-label="设置" aria-hidden="true">
+    <nav class="settings-nav"><div class="settings-brand"><img alt="">ZJUers <span>轻首页</span></div><div class="settings-nav-label">SETTINGS / 设置</div><button class="settings-tab active" data-tab="campus">校内服务</button><button class="settings-tab" data-tab="weather">天气</button><button class="settings-tab" data-tab="appearance">搜索与界面</button><button class="settings-tab" data-tab="data">数据与关于</button><div class="settings-nav-foot">个人首页 · 0.2.0</div></nav>
+    <div class="settings-content"><div class="settings-header"><div><span class="eyebrow" id="settingsKicker">CAMPUS SERVICES</span><h2 id="settingsTitle">校内服务</h2></div><button class="settings-close" id="settingsClose" aria-label="关闭设置">×</button></div><div id="settingsBody"></div></div>
+  </aside>
+
+  
+</div>

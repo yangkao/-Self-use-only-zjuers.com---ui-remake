@@ -1,0 +1,133 @@
+{
+  "version": "0.1.4",
+  "acceptedDate": "2026-10-01",
+  "timezone": "Asia/Shanghai",
+  "package": "bin/mvp",
+  "files": [
+    {
+      "path": "assets/emblem.png",
+      "bytes": 64402,
+      "sha256": "dc914cc634bdcd9b871c84686817c12287c6bafd309f083a1054040aee806fca"
+    },
+    {
+      "path": "assets/wallpaper.mp4",
+      "bytes": 131955974,
+      "sha256": "52a35d85cf05dac77f45ba7d2ac1ad8201094b7560bc1036f44fa8a762d2dd32"
+    },
+    {
+      "path": "background.js",
+      "bytes": 3838,
+      "sha256": "1f1b79a7605a348d42102fc2b21814da5693d7abb0aebea45beb4da187a27f37"
+    },
+    {
+      "path": "boot.js",
+      "bytes": 1084,
+      "sha256": "70e1b572dcc121968b728809abace6f15b226f122eae12d8fd8e3b39d8f21ed5"
+    },
+    {
+      "path": "content.js",
+      "bytes": 5211,
+      "sha256": "af84035f9a27a5c85c05cd111a1d426e107a6e329bc924daf42c8eee5dbf1bc2"
+    },
+    {
+      "path": "core.js",
+      "bytes": 2688,
+      "sha256": "f7e496908f04fe3d2a0bd6d044c04ab4a8ea8827d39a44a2566be2e70de6c6d8"
+    },
+    {
+      "path": "diagnostics.css",
+      "bytes": 388,
+      "sha256": "d48fa2ed173b33793f1de9f51e43e3d5334685cdaa182554919a70a71dc77ee4"
+    },
+    {
+      "path": "diagnostics.html",
+      "bytes": 511,
+      "sha256": "948e15131abd796312394581e0f23c4265ce3ea793f4edc7bb720ccd58cefc6e"
+    },
+    {
+      "path": "diagnostics.js",
+      "bytes": 777,
+      "sha256": "ed2cf5aaa8464f3b43600214b5cb49f5f52ebbe76c0cb96fc27420497ab68f71"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 933,
+      "sha256": "ae33f4fb4bf05639216437f69b03caf3519b4bde46fd518e9249146aa556413d"
+    },
+    {
+      "path": "policy.js",
+      "bytes": 2042,
+      "sha256": "b1a0ae5048d5eff022416402174cbc0e4982c2edca40b064582c0b3b71acd687"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3191,
+      "sha256": "e1c575a4da140cfe24e28f33c97f8ae78a0f6cde4930fcb5a8ab38ce58c961f8"
+    },
+    {
+      "path": "replacement.js",
+      "bytes": 1087,
+      "sha256": "445bed1d2de2e632fbd208643c929fde4d75a8801a625aac60cc824a5d81e76f"
+    },
+    {
+      "path": "startup.css",
+      "bytes": 622,
+      "sha256": "68406721753a6438d80de5e1daab8208bdbe2e53d47c134fd980e76a986b4a1b"
+    },
+    {
+      "path": "startup.js",
+      "bytes": 1458,
+      "sha256": "7fef1be4f50e88e261c1dbc949c8871c392b6c76e2678739a13a8ac7666d3acd"
+    },
+    {
+      "path": "ui/media/favicon.ico",
+      "bytes": 4286,
+      "sha256": "59f127c7db9de2618a7405aed66122bc06331fb184582cc5b062c7291880e01b"
+    },
+    {
+      "path": "ui/media/JosefinSans-OFL.txt",
+      "bytes": 4449,
+      "sha256": "aee5a4081e8a52f80428b30f178b719d115f18dad3e1fa15a986163e1078a85b"
+    },
+    {
+      "path": "ui/media/JosefinSans.ttf",
+      "bytes": 118588,
+      "sha256": "9255abdb5f393bc51e101abbd07a716a977fd3e15472b1b84b260f426a342bfd"
+    },
+    {
+      "path": "ui/media/RobotoSlab-LICENSE.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "ui/media/RobotoSlab.ttf",
+      "bytes": 251880,
+      "sha256": "786ae192477447d33c6672c3055fba7cbfe45184c9a79e77a14f15716ca05b16"
+    },
+    {
+      "path": "ui/media/SOURCES.md",
+      "bytes": 1610,
+      "sha256": "e0ba248eefa402010ed42030a682b968e61f1695446949904147547a395d23a1"
+    },
+    {
+      "path": "ui/media/zjuers.png",
+      "bytes": 9916,
+      "sha256": "f31425c2ce436ff69fe37f9d73b5977f38df2ae40a6afc6345272fe1aec7e42d"
+    },
+    {
+      "path": "ui/script.js",
+      "bytes": 24298,
+      "sha256": "0ca04399e4361f480ca6b14992d9d58fc0e5fcb05ce1038e44aeb5a4b2346fb8"
+    },
+    {
+      "path": "ui/style.css",
+      "bytes": 23945,
+      "sha256": "c29e80a0ada79ee7a978cd83059b5be31adf044eb797d56cf972c6a4c34724aa"
+    },
+    {
+      "path": "ui/template.html",
+      "bytes": 6581,
+      "sha256": "fe10a461bb4cc7609f2b43b3130abf263ca4e0ff9f5fabd1855b8fd5fa59a69a"
+    }
+  ]
+}

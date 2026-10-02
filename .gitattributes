@@ -1,0 +1,15 @@
+* text=auto
+*.md text eol=lf
+*.js text eol=lf
+*.cjs text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.svg text eol=lf
+*.png binary
+*.ico binary
+*.ttf binary
+# Preserve accepted extension bytes so manifest hashes also verify after cloning.
+srcs/extension/** -text
+srcs/extension/assets/wallpaper.mp4 filter=lfs diff=lfs merge=lfs -text

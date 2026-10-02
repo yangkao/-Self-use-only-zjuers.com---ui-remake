@@ -1,0 +1,20 @@
+# Local source assets and downloaded references remain on this machine.
+/assets/
+/bin/
+/temp/
+/srcs/preview/
+/srcs/entry-probe/
+/srcs/redirect-probe/
+/初版设计讨论.txt
+
+# Local tool state and credentials must not be published.
+/.codex/
+/.agents/
+/.aws/
+.env
+.env.*
+*.pem
+*.key
+__pycache__/
+*.pyc
+node_modules/

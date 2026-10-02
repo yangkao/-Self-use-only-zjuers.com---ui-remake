@@ -1,0 +1,7 @@
+/* Injected before the homepage DOM is painted. Does not block its parsing. */
+html:not([data-zjuers-state]),html[data-zjuers-state="loading"]{background:#190b25!important}
+html:not([data-zjuers-state]) body,html[data-zjuers-state="loading"] body{background:#190b25!important}
+html:not([data-zjuers-state]) body{animation:zjuers-source-recovery 8s steps(1,end) forwards!important}
+@keyframes zjuers-source-recovery{from{visibility:hidden}to{visibility:visible}}
+html[data-zjuers-state="loading"] body>*{visibility:hidden!important}
+html[data-zjuers-state="ready"] body>*:not(#zjuers-personal-host){display:none!important}

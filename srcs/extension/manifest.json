@@ -1,0 +1,68 @@
+{
+  "manifest_version": 3,
+  "name": "ZJUers 个人首页",
+  "version": "0.2.0",
+  "description": "在 ZJUers 轻首页完整原站上应用个人界面，并将 Edge 新标签导向原站。",
+  "permissions": [
+    "storage",
+    "tabs",
+    "webNavigation",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "https://zjuers.com/*",
+    "https://*.qweatherapi.com/*",
+    "https://v1.hitokoto.cn/*",
+    "https://zjuam.zju.edu.cn/*",
+    "https://zdbk.zju.edu.cn/*",
+    "https://courses.zju.edu.cn/*",
+    "https://identity.zju.edu.cn/*",
+    "https://yjsy.zju.edu.cn/*",
+    "http://calendar.celechron.top/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "account.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://zjuers.com/",
+        "https://zjuers.com/?*",
+        "https://zjuers.com/index.html",
+        "https://zjuers.com/index.html?*"
+      ],
+      "css": [
+        "startup.css"
+      ],
+      "js": [
+        "boot.js",
+        "core.js",
+        "startup.js",
+        "ui/script.js",
+        "ui/external.js",
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "ui/*",
+        "ui/media/*",
+        "assets/*"
+      ],
+      "matches": [
+        "https://zjuers.com/*"
+      ]
+    }
+  ],
+  "icons": {
+    "128": "ui/media/zjuers.png"
+  },
+  "action": {
+    "default_title": "打开 ZJUers 个人首页",
+    "default_icon": "ui/media/zjuers.png"
+  }
+}
