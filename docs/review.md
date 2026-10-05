@@ -365,3 +365,8 @@ assets原始素材未改动；扩展源码、测试、构建脚本、正式产�
 用户指出 Edge 当前配色可覆盖更多浏览器区域，授权修改正式版。核对 Chromium 主题字段表后，将 Edge 静态主题生成从9个颜色字段增至24个，覆盖活动／非活动与隐私标签背景和文字、地址栏背景与文字、工具栏图标与文字、书签栏文字、新标签背景/标题/链接/文字。文字按对应背景校验至少4.5:1对比度，不足时选择高对比度文字色。字段证据：https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/browser/themes/browser_theme_pack.cc 。Edge 特有区域是否全部响应这些字段，仍须在浏览器内实测；独立主题包仍需用户手动应用。
 
 源码与安装包版本更新到0.3.1。测试101项通过，正式包44文件，构建验证源码哈希、JS语法、manifest引用、ZIP完整性及文件哈希。用户现有安装目录bin/release/zjuers-home-0.2.0同步为0.3.1以保持扩展身份。本次未读取浏览器凭据或更改已保存首页主题数据，未提交或上传GitHub。
+## 2026-10-05 正式版发布 0.3.1
+
+用户审阅通过包含扩展版 Edge 配色字段的 0.3.1 正式版，并授权上传私有 GitHub 仓库和发布 Release。发布前重新运行 101 项自动化测试，全部通过；`srcs/build-release.py` 核验源文件哈希、JavaScript 语法、资源引用、ZIP 完整性和文件哈希，均通过。检查纳入版本控制的文件路径，未发现校内或天气凭据明文；默认壁纸继续按项目原有方式由 Git LFS 跟踪。
+
+正式代码提交为 `df4248e`，推送到私有仓库 `main`，并推送标签 `v0.3.1`。GitHub Release 已发布：<https://github.com/yangkao/-Self-use-only-zjuers.com---ui-remake/releases/tag/v0.3.1>。附件含 `zjuers-home-0.3.1.zip` 和 `SHA256SUMS.txt`；通过 GitHub API 核对 Release 非草稿、非预发布，两个附件均处于 uploaded 状态，ZIP 大小 132337583 字节，与本地构建产物一致。ZIP 的 SHA256 为 `a084e625d34c53b33c31a4db00720ecb67f4c858b8ad86d3e22ffbab8d63d548`，与校验文件一致。发布说明见 `docs/release-notes-0.3.1.md`。
