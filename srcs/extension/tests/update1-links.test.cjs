@@ -1,0 +1,3 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const P=require('../providers/campus.js');
+test('homework opens the verified course/activity route rather than source homepage',()=>{const rows=P.parseAssignments({todo_list:[{id:456,course_id:123,type:'homework',title:'Fixture',is_student:true}]});assert.equal(rows.items[0].url,'https://courses.zju.edu.cn/course/123/learning-activity#/456');});
+test('unverified types or malformed routing IDs retain the safe source entry',()=>{const r=P.parseAssignments({todo_list:[{id:'abc/evil',course_id:'1',type:'homework',is_student:true},{id:2,course_id:3,type:'exam',is_student:true}]});assert.ok(r.items.every(x=>x.url==='https://courses.zju.edu.cn/user/index'));});

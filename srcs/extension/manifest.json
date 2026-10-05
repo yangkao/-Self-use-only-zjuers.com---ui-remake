@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ZJUers 个人首页",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "在 ZJUers 轻首页完整原站上应用个人界面，并将 Edge 新标签导向原站。",
   "permissions": [
     "storage",
@@ -18,7 +18,8 @@
     "https://courses.zju.edu.cn/*",
     "https://identity.zju.edu.cn/*",
     "https://yjsy.zju.edu.cn/*",
-    "http://calendar.celechron.top/*"
+    "http://calendar.celechron.top/*",
+    "file:///*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -38,7 +39,11 @@
       "js": [
         "boot.js",
         "core.js",
+        "theme-core.js",
         "startup.js",
+        "theme-export.js",
+        "ui/wallpaper.js",
+        "ui/customization.js",
         "ui/script.js",
         "ui/external.js",
         "content.js"
@@ -51,7 +56,13 @@
       "resources": [
         "ui/*",
         "ui/media/*",
-        "assets/*"
+        "assets/*",
+        "media.html",
+        "media.css",
+        "media.js",
+        "theme-core.js",
+        "thumbnail.html",
+        "thumbnail.js"
       ],
       "matches": [
         "https://zjuers.com/*"

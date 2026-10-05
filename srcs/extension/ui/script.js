@@ -69,9 +69,12 @@ groups.forEach((group, index) => {
 });
 
 const settings = {
+  themes: {kicker:'LOCAL THEMES',title:'主题与壁纸',body:''},
+  visual: {kicker:'VISUAL',title:'视觉',body:''},
+  greeting: {kicker:'GREETING',title:'问候',body:''},
   campus: { kicker: 'CAMPUS SERVICES', title: '校内服务', body: `<p class="empty-state">正在初始化真实数据界面…</p>` },
   weather: { kicker: 'WEATHER', title: '天气', body: `<p class="empty-state">正在初始化真实数据界面…</p>` },
-  appearance: { kicker: 'APPEARANCE', title: '搜索与界面', body: `<section class="settings-section"><h3 class="settings-section-title">搜索</h3><div class="setting-row"><div>默认搜索引擎<small>主界面仍可即时切换</small></div><select class="setting-select" aria-label="默认搜索引擎"><option>Bing</option><option>Google</option><option>必应学术</option></select></div></section><section class="settings-section"><h3 class="settings-section-title">导航</h3><div class="setting-row"><div>记住分组折叠状态<small>首次打开时所有分组默认展开</small></div><button class="setting-button" type="button">关闭</button></div><div class="setting-row"><span>恢复全部展开</span><button class="setting-button" type="button">恢复</button></div></section><section class="settings-section"><h3 class="settings-section-title">视觉</h3><div class="setting-row"><span>背景遮罩</span><input class="setting-slider" type="range" min="0" max="100" value="55" aria-label="背景遮罩预览"></div><div class="setting-row"><span>背景模糊</span><input class="setting-slider" type="range" min="0" max="100" value="36" aria-label="背景模糊预览"></div><div class="setting-row"><div>文字对比度<small>具体范围待视觉审阅后确定</small></div><div class="pill-group"><button class="selected">标准</button><button>增强</button></div></div></section>` },
+  appearance: { kicker: 'APPEARANCE', title: '搜索与界面', body: `<section class="settings-section"><h3 class="settings-section-title">搜索</h3><div class="setting-row"><div>默认搜索引擎<small>主界面仍可即时切换</small></div><select class="setting-select" aria-label="默认搜索引擎"><option>Bing</option><option>Google</option><option>必应学术</option></select></div></section><section class="settings-section"><h3 class="settings-section-title">导航</h3><div class="setting-row"><div>记住分组折叠状态<small>首次打开时所有分组默认展开</small></div><button class="setting-button" type="button">关闭</button></div><div class="setting-row"><span>恢复全部展开</span><button class="setting-button" type="button">恢复</button></div></section>` },
   data: { kicker: 'DATA & ABOUT', title: '数据与关于', body: `<p class="empty-state">正在初始化真实数据界面…</p>` }
 };
 
@@ -96,7 +99,7 @@ root.addEventListener('contextmenu', event => {
   if (event.target.closest('.preview-control, button, input, a, select')) return;
   event.preventDefault(); openSecondary();
 });
-secondary.addEventListener('click', event => { if (!event.target.closest('.preview-control, button, a')) closeSecondary(); });
+secondary.addEventListener('click', event => { if (!event.target.closest('.preview-control, button, a, .secondary-heading')) closeSecondary(); });
 root.getElementById('settingsTrigger').addEventListener('click', openSettings);
 root.getElementById('settingsClose').addEventListener('click', closeSettings);
 backdrop.addEventListener('click', closeSettings);
@@ -108,7 +111,7 @@ const engineIcons = {
   Google: '<path d="M20 8a8 8 0 1 0 1 7v-3h-9" stroke-width="3.5" fill="none" stroke="currentColor"/>',
   '浙大通': cardIcons.eagle,
   '知乎': '<path d="M4 4h7M3 10h9M7 4v9l-4 7M7 13l5 6M15 5h6v13h-6V5Z"/>',
-  '有道': '<path d="M4 3h16v18H4z" fill="currentColor" stroke="none"/><path d="M7 7h10M11 5l-4 7M10 10h6v8M10 10v9M10 13h6M10 16h6" stroke="#281733" stroke-width="1.5"/>',
+  '有道': '<path d="M4 3h16v18H4z" fill="currentColor" stroke="none"/><path d="M7 7h10M11 5l-4 7M10 10h6v8M10 10v9M10 13h6M10 16h6" stroke="var(--theme-panel,#281733)" stroke-width="1.5"/>',
   'B站': '<rect x="3" y="6" width="18" height="14" rx="3"/><path d="m7 2 3 4m7-4-3 4M7 11v4M17 11v4M10 17h4"/>',
   CSDN: '<path d="M5 9C3 5 7 2 12 3s8 3 7 6M5 10c-5-3-5 7 0 5m14-5c5-3 5 7 0 5M5 10c0-5 5-5 7-2 2-3 7-3 7 2v5c0 7-14 7-14 0Z"/><circle cx="8.5" cy="12" r=".8" fill="currentColor" stroke="none"/><circle cx="15.5" cy="12" r=".8" fill="currentColor" stroke="none"/><path d="M9 17q3 2 6 0"/>',
   Github: '<path fill="currentColor" stroke="none" d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.6 9.6 0 0 1 12 6.82c.85 0 1.7.11 2.5.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/>',
@@ -119,7 +122,7 @@ const engineIcons = {
 };
 function engineSvg(name) {
   if (name === '浙大通') return eagleSvg();
-  if (name === 'GH镜') return `<svg viewBox="0 0 24 24" aria-hidden="true"><g transform="translate(0 0) scale(.82)">${engineIcons.Github}</g><rect x="13" y="14" width="11" height="10" rx="3" fill="#281733" stroke="none"/><path d="M15 19h7m-3-3 3 3-3 3" stroke="currentColor" fill="none" stroke-width="1.8"/></svg>`;
+  if (name === 'GH镜') return `<svg viewBox="0 0 24 24" aria-hidden="true"><g transform="translate(0 0) scale(.82)">${engineIcons.Github}</g><rect x="13" y="14" width="11" height="10" rx="3" fill="var(--theme-panel,#281733)" stroke="none"/><path d="M15 19h7m-3-3 3 3-3 3" stroke="currentColor" fill="none" stroke-width="1.8"/></svg>`;
   return `<svg viewBox="0 0 24 24" aria-hidden="true">${engineIcons[name]}</svg>`;
 }
 engineButton.innerHTML = engineSvg('Bing');
@@ -248,4 +251,5 @@ window.addEventListener('scroll',()=>tooltip.hidden=true,{passive:true});
 window.addEventListener('resize',()=>tooltip.hidden=true,{passive:true});
 selectEngine(prefs.engine);applyVisuals();renderSettingsControls();
 root.querySelector('video').muted=true;
+HomeCustomize.initialize(root,{...context,openSecondary,openSettings});
 }

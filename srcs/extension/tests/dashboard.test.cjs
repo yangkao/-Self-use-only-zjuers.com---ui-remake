@@ -35,7 +35,7 @@ test('complete dashboard initializes calendar, real cards and live settings toge
  assert.match(view.querySelector('.weather-card').textContent,/19°/);
  assert.match(view.querySelector('.weather-card').textContent,/湿度 80%/);
  assert.match(view.querySelector('.assignments-card').textContent,/真实作业/);
- assert.match(settings.textContent,/完整功能预览/);assert.doesNotMatch(settings.textContent,/MVP|示例|演示/);
+ assert.match(settings.textContent,/正式版/);assert.doesNotMatch(settings.textContent,/MVP|示例|演示/);
  assert.match(view.querySelector('.quote-meta').textContent,/作者 · 《作品》/);
  assert.equal(view.querySelector('.quote-meta').parent===view.querySelector('h1'),false);
  assert.equal(view.querySelector('.quote-meta').parent,view.querySelector('h1').parent);

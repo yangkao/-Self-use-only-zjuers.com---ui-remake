@@ -1,3 +1,7 @@
+# 当前验收：0.3.1（2026-10-04）
+
+用户宣布第一轮改进预览通过，授权正式交付与清理；随后要求扩展 Edge 主题配色范围。主题、壁纸、整套配色、设置界面及细节修改纳入正式版；0.3.1 共101项自动测试通过，Edge 新增配色范围待用户实机核对。当前哈希基线见full-acceptance-manifest.json，正式包见release.md。后文保留0.2.0历史验收范围与限制，旧包路径已整理。
+
 # 本轮完整功能版验收与交接
 
 验收日期：2026-10-02（Asia/Shanghai）。用户宣布当前预览版通过，作为本轮最终版本，并授权收尾。本轮收尾完成后停止，等待用户指定下一轮流程。
@@ -7,7 +11,7 @@
 - 通过版本：`bin/full-preview/`，版本 0.2.0。保留原安装路径，避免改变扩展 ID 和已保存的配置。
 - 源码：`srcs/extension/`；构建：`python srcs/build-preview.py`。
 - 文件校验清单：`docs/full-acceptance-manifest.json`，记录交付文件大小及 SHA-256。
-- 安装和配置：`docs/full-preview.md`；最终方案：`docs/full-preview-plan.md`；校内来源说明：`docs/campus-source-notes.md`。
+- 安装和配置：`docs/install.md`；最终方案：`docs/full-preview-plan.md`；校内来源说明：`docs/campus-source-notes.md`。
 - 过程记录：`docs/review.md`。旧 MVP 与第一阶段静态基线保留，assets 原始素材未修改。
 
 ## 本轮通过范围

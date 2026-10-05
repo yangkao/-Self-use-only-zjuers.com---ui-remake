@@ -19,9 +19,12 @@
     const root = host.attachShadow({mode:'open'});
     const stylesheet = document.createElement('link'); stylesheet.rel = 'stylesheet'; stylesheet.href = resource('ui/style.css');
     const styleReady = new Promise((resolve,reject) => {
-      stylesheet.onload = () => {report('内置样式加载完成');resolve();};
+      let pending=2;const loaded=()=>{if(--pending===0)resolve();};
+      stylesheet.onload = () => {report('内置样式加载完成');loaded();};
       stylesheet.onerror = () => reject(new Error('无法加载界面样式'));
       root.append(stylesheet);
+      const custom=document.createElement('link');custom.rel='stylesheet';custom.href=resource('ui/customization.css');
+      custom.onload=loaded;custom.onerror=()=>reject(new Error('无法加载主题样式'));root.append(custom);
     });
     const bodyReady = wait(()=>Boolean(document.body)).then(()=>document.body.append(host));
     // Fonts must be registered outside the shadow tree for browser font lookup.

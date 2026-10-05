@@ -1,6 +1,7 @@
 """Verify the accepted baseline and create the official unpacked and ZIP artifacts."""
 from pathlib import Path
 import hashlib
+import datetime
 import json
 import shutil
 import subprocess
@@ -57,7 +58,7 @@ for value in references:
 installed = sorted(p for p in PACKAGE.rglob('*') if p.is_file())
 with zipfile.ZipFile(ARCHIVE, 'w', allowZip64=True) as archive:
     for p in installed:
-        info = zipfile.ZipInfo(NAME + '/' + p.relative_to(PACKAGE).as_posix(), (2026, 10, 2, 0, 0, 0))
+        info = zipfile.ZipInfo(NAME + '/' + p.relative_to(PACKAGE).as_posix(), (*datetime.date.fromisoformat(accepted['acceptedDate']).timetuple()[:3], 0, 0, 0))
         info.compress_type = zipfile.ZIP_STORED if p.suffix == '.mp4' else zipfile.ZIP_DEFLATED
         info.external_attr = 0o100644 << 16
         with p.open('rb') as source, archive.open(info, 'w', force_zip64=True) as target:

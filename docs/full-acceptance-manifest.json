@@ -1,8 +1,8 @@
 {
-  "version": "0.2.0",
-  "acceptedDate": "2026-10-02",
+  "version": "0.3.1",
+  "acceptedDate": "2026-10-04",
   "timezone": "Asia/Shanghai",
-  "package": "bin/full-preview",
+  "package": "bin/release/zjuers-home-0.3.1",
   "files": [
     {
       "path": "account.css",
@@ -31,8 +31,8 @@
     },
     {
       "path": "background.js",
-      "bytes": 3984,
-      "sha256": "2af334f6e1d57fbdd158eee8f0d45ffb1e564674fed72d4a41e254b10db0a595"
+      "bytes": 4001,
+      "sha256": "1377edefffde6ba1701b3dac889e8bfce26b5f8fa9f8102ef1aebe976b9c24cc"
     },
     {
       "path": "boot.js",
@@ -41,8 +41,8 @@
     },
     {
       "path": "content.js",
-      "bytes": 6138,
-      "sha256": "3090f9521f1823cc8fcc308642a8b6442206e3c3d7e0eb47c391a06a4107ce15"
+      "bytes": 6441,
+      "sha256": "c2fee117b4ae2974b787379580563274bd8b368cc754da69a9f2e546ee933904"
     },
     {
       "path": "core.js",
@@ -66,8 +66,8 @@
     },
     {
       "path": "external-background.js",
-      "bytes": 13383,
-      "sha256": "931820b1cb27d732fb5881fcc46972b939a34d469dfb83210481316d31869085"
+      "bytes": 15339,
+      "sha256": "30222c3a779f961ba02ff123db31c38b03495727bdc3b7022f495da1ca81ad37"
     },
     {
       "path": "external-core.js",
@@ -76,8 +76,23 @@
     },
     {
       "path": "manifest.json",
-      "bytes": 1588,
-      "sha256": "34c04d29eb7de08bc9afba9ad663537e854ee388ef9cd9822e392b62850751b0"
+      "bytes": 1864,
+      "sha256": "7947c2137c66602c0ac5a56c8a0fc56704114ce088324b6f13a551300459397d"
+    },
+    {
+      "path": "media.css",
+      "bytes": 185,
+      "sha256": "1f5bde4a129046d55f6524fe04712487fced2df8095dc96cc0cd47ece29dc66d"
+    },
+    {
+      "path": "media.html",
+      "bytes": 303,
+      "sha256": "ce3bd7ff331dc83adb40ff82c9f82d596e5b778bc79f1c84f8b35cbac71259d2"
+    },
+    {
+      "path": "media.js",
+      "bytes": 6312,
+      "sha256": "55c13fafccab2055ab48ab2fd104378cafcab514022ceab5d960ab3a7ba2b185"
     },
     {
       "path": "policy.js",
@@ -86,8 +101,8 @@
     },
     {
       "path": "providers/campus.js",
-      "bytes": 20989,
-      "sha256": "4143ce0dcab7653385417fbb73e0635483c3336c4aef39280b08d33074b9613c"
+      "bytes": 21134,
+      "sha256": "e4de650f8fd1c83cfbdb7f38cd7b3d55ea709758a5f136ca939d9dc4b7617e61"
     },
     {
       "path": "README.md",
@@ -115,9 +130,39 @@
       "sha256": "7fef1be4f50e88e261c1dbc949c8871c392b6c76e2678739a13a8ac7666d3acd"
     },
     {
+      "path": "theme-core.js",
+      "bytes": 8135,
+      "sha256": "f39f260753fa6d66951393fecd193c6c5272045235badd0ca823d8d743948260"
+    },
+    {
+      "path": "theme-export.js",
+      "bytes": 1791,
+      "sha256": "cd30acef73459cf9de8ae662ef76773ca421df1cb58eea7d283713b1bb27874f"
+    },
+    {
+      "path": "thumbnail.html",
+      "bytes": 395,
+      "sha256": "262c2eb073e93d5e1e12707b7aa24a1e2561e3747f080bcace00c60c21a146f6"
+    },
+    {
+      "path": "thumbnail.js",
+      "bytes": 2096,
+      "sha256": "81479fe89254877ead80f840d04f2e81e19f74c8867c4c4d5eefb6b08dea1217"
+    },
+    {
+      "path": "ui/customization.css",
+      "bytes": 17065,
+      "sha256": "708b373b428b10b7f27f05d2fbed6dd924c5a1e852ca7b8c0bd528f0c7b73f2e"
+    },
+    {
+      "path": "ui/customization.js",
+      "bytes": 20692,
+      "sha256": "cd701e8b74ca16fa0d845d7a18dbd8ffb0e338749cd14e27fe9338d4ef6388db"
+    },
+    {
       "path": "ui/external.js",
-      "bytes": 30354,
-      "sha256": "129a9b5603a6d26a1d4e4dfe9bc7816df8033519496cf9edf9440150af73ef10"
+      "bytes": 30446,
+      "sha256": "d066c4b16ace6f3f366fe87014e6e07e42d19b46b3afb58275697894250181d3"
     },
     {
       "path": "ui/media/favicon.ico",
@@ -156,18 +201,23 @@
     },
     {
       "path": "ui/script.js",
-      "bytes": 22041,
-      "sha256": "035a9e0cfa10ee9cf85eb2ee286978318097696304bfcb1da7d290a291554e3f"
+      "bytes": 21739,
+      "sha256": "088269f62254c4bfd6b15f6aafed716d1a377928548c60fe0ade66316f18b093"
     },
     {
       "path": "ui/style.css",
-      "bytes": 36171,
-      "sha256": "4b465482855bc0a6cc5326df1ba91867f760b78717ffc3f218fcc02f8c726d1d"
+      "bytes": 46182,
+      "sha256": "8ea215d3b16bc18fe5828286fa7ca3b137f986c90905351779c3c721eb28bddb"
     },
     {
       "path": "ui/template.html",
-      "bytes": 4402,
-      "sha256": "3aade04ca2b7a528e0b26705a8cfee885539dea13df188c7bfc8aef99c3a92b1"
+      "bytes": 4599,
+      "sha256": "92e49c909a6c855cd3b6e5291c9d5b538e584685c8cd9320beb8d331e77b85eb"
+    },
+    {
+      "path": "ui/wallpaper.js",
+      "bytes": 3964,
+      "sha256": "2f280e3c5853297f7e448d693d91f33452691d662a4230f998fb65bfab2c7452"
     }
   ]
 }

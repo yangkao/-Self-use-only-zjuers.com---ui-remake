@@ -4,10 +4,13 @@ import hashlib
 import json
 import shutil
 import subprocess
+import argparse
 
 root = Path(__file__).resolve().parents[1]
 source = root / 'srcs' / 'extension'
-target = root / 'bin' / 'full-preview'
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--target', choices=['full-preview', 'update1-preview'], default='update1-preview')
+target = root / 'bin' / parser.parse_args().target
 target.mkdir(parents=True, exist_ok=True)
 files = [p for p in source.rglob('*') if p.is_file()
          and 'tests' not in p.relative_to(source).parts

@@ -1,4 +1,4 @@
-importScripts('policy.js', 'replacement.js', 'core.js', 'external-core.js', 'providers/campus.js', 'external-background.js');
+importScripts('policy.js', 'replacement.js', 'core.js', 'theme-core.js', 'external-core.js', 'providers/campus.js', 'external-background.js');
 let queue = Promise.resolve();
 const nativeTabs = new Set();
 async function record(event, details = {}) {

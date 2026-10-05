@@ -26,10 +26,10 @@
  function compactRain(value){return String(value||'短时降水等待更新').replace(/未来两小时/g,'未来2小时').replace(/间歇性降雨还将持续(\d+)分钟/g,'间歇降雨约$1分钟').replace(/降雨还将持续(\d+)分钟/g,'降雨持续约$1分钟').replace(/(\d+)分钟后开始下雨/g,'约$1分钟后降雨');}
  function watchVideo(video,doc,report){
   let disposed=false,pending=false,lastTime=-1,stalls=0;video.muted=true;video.loop=true;
-  const resume=()=>{if(disposed||doc.hidden||pending||(!video.paused&&!video.ended))return;pending=true;try{Promise.resolve(video.play()).then(()=>report('视频恢复播放'),()=>report('视频播放尝试失败')).finally(()=>{pending=false;});}catch{pending=false;report('视频播放尝试失败');}};
+  const resume=()=>{if(disposed||doc.hidden||video.style?.display==='none'||pending||(!video.paused&&!video.ended))return;pending=true;try{Promise.resolve(video.play()).then(()=>report('视频恢复播放'),()=>report('视频播放尝试失败')).finally(()=>{pending=false;});}catch{pending=false;report('视频播放尝试失败');}};
   const handlers={canplay:resume,pause:()=>{report('视频暂停');resume();},waiting:()=>report('视频缓冲等待'),stalled:()=>report('视频缓冲停滞'),error:()=>report('视频解码或资源错误'),playing:()=>{stalls=0;report('视频正在播放');}};
   for(const [name,fn]of Object.entries(handlers))video.addEventListener(name,fn);doc.addEventListener('visibilitychange',resume);resume();
-  const timer=setInterval(()=>{if(doc.hidden||disposed)return;if(video.paused){resume();return;}if(video.readyState>=3&&video.currentTime===lastTime){if(++stalls===2){report('视频进度停滞，尝试恢复');video.pause();resume();}}else stalls=0;lastTime=video.currentTime;},10000);
+  const timer=setInterval(()=>{if(doc.hidden||disposed||video.style?.display==='none')return;if(video.paused){resume();return;}if(video.readyState>=3&&video.currentTime===lastTime){if(++stalls===2){report('视频进度停滞，尝试恢复');video.pause();resume();}}else stalls=0;lastTime=video.currentTime;},10000);
   return ()=>{disposed=true;clearInterval(timer);for(const [name,fn]of Object.entries(handlers))video.removeEventListener(name,fn);doc.removeEventListener('visibilitychange',resume);};
  }
  function icon(kind){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');svg.classList.add('detail-icon');const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',kind==='place'?'M12 22s7-7 7-13a7 7 0 0 0-14 0c0 6 7 13 7 13Zm0-16a3 3 0 1 0 0 6 3 3 0 0 0 0-6':kind==='calendar'?'M4 5h16v16H4ZM4 10h16M8 3v5M16 3v5M8 14h2M14 14h2M8 18h2':'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20M12 6v6l4 2');svg.append(path);return svg;}
@@ -58,7 +58,7 @@
   const app=view.querySelector('.app'),settings=view.getElementById('settingsBody');
   let state={entries:{},config:{}},day=dateOf(),followToday=true,allExams=false,busy=0,timer,quoteRequested=false,quoteFinal=null,disposed=false,bootstrapped=false;
   const cards={now:view.querySelector('.weather-card'),courses:view.querySelector('.schedule-card'),exams:view.querySelector('.exam-card'),assignments:view.querySelector('.assignments-card')};
-  const headings={now:['WEATHER / 天气','https://www.qweather.com/'],courses:['SCHEDULE / 今日课表','https://zdbk.zju.edu.cn/'],exams:['EXAMS / 近期考试','https://zdbk.zju.edu.cn/'],assignments:['COURSES / 学在浙大','https://courses.zju.edu.cn/']};
+  const headings={now:['WEATHER / 天气','https://www.qweather.com/'],courses:['SCHEDULE / 今日课表','https://zdbk.zju.edu.cn/'],exams:['EXAMS / 近期考试','https://zdbk.zju.edu.cn/'],assignments:['COURSES / 近期作业','https://courses.zju.edu.cn/']};
   const bodies={};
   let calendarMonth=day.slice(0,7),calendarPanel,calendarButton;
   function chooseDay(value){day=value;followToday=value===dateOf();if(calendarPanel){calendarPanel.hidden=true;calendarButton.setAttribute('aria-expanded','false');}void snapshot().then(()=>refresh(['courses'])).catch(()=>{});}
@@ -132,7 +132,7 @@
   function settingsSection(title){const section=element('section',undefined,'settings-section');section.append(element('h3',title,'settings-section-title'));settings.append(section);return section;}
   function settingRow(parent,label,control){const r=element('div',undefined,'setting-row');r.append(element('div',label),control);parent.append(r);return r;}
   function renderSettings(){
-   const tab=view.querySelector('.settings-tab.active')?.dataset.tab;if(tab==='appearance')return;
+   const tab=view.querySelector('.settings-tab.active')?.dataset.tab;if(['appearance','themes','visual','greeting'].includes(tab))return;
    settings.replaceChildren();
    if(tab==='campus'){
     const s=settingsSection('浙大统一身份认证');const status=element('span',undefined,'setting-status');status.dataset.configStatus='campus';settingRow(s,'当前账户',status);settingRow(s,'学号与密码在独立扩展页面配置',button('配置账户','open-account'));settingRow(s,'重新连接各信息源',button('重新登录','refresh',['courses','assignments','exams']));settingRow(s,'退出并清除本扩展的凭据与校内缓存',button('退出并清除','logout'));
@@ -142,7 +142,7 @@
     const refs=element('span',undefined,'setting-status');refs.dataset.weatherReferences='';settingRow(s,'来源归属说明',refs);
    }else{
     const s=settingsSection('数据管理');settingRow(s,'清除天气、校内信息与名句缓存，保留凭据',button('清除缓存','clear-cache'));settingRow(s,'清除校内凭据与校内缓存',button('退出并清除','logout'));const reset=button('重置','');reset.dataset.action='reset';settingRow(s,'重置界面偏好',reset);
-    const about=settingsSection('关于此首页');settingRow(about,'版本',element('span','完整功能预览 · 0.2.0'));settingRow(about,'页面基础',link('ZJUers 轻首页','https://zjuers.com/'));settingRow(about,'天气',link('和风天气','https://www.qweather.com/'));settingRow(about,'哲学名句',link('一言','https://hitokoto.cn/'));settingRow(about,'校内接入参考',link('Celechron','https://github.com/Celechron/Celechron'));settingRow(about,'权限与来源说明',link('查看',chrome.runtime.getURL('sources.html')));const sourceLink=about.lastElementChild.querySelector('a');sourceLink.href=chrome.runtime.getURL('sources.html');
+    const about=settingsSection('关于此首页');settingRow(about,'版本',element('span','正式版 · 0.3.1'));settingRow(about,'页面基础',link('ZJUers 轻首页','https://zjuers.com/'));settingRow(about,'天气',link('和风天气','https://www.qweather.com/'));settingRow(about,'哲学名句',link('一言','https://hitokoto.cn/'));settingRow(about,'校内接入参考',link('Celechron','https://github.com/Celechron/Celechron'));settingRow(about,'权限与来源说明',link('查看',chrome.runtime.getURL('sources.html')));const sourceLink=about.lastElementChild.querySelector('a');sourceLink.href=chrome.runtime.getURL('sources.html');
    }
    const out=element('output',undefined,'settings-message');out.setAttribute('aria-live','polite');settings.append(out);renderSettingsStatus();
   }

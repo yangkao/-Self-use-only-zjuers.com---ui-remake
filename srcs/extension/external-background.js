@@ -91,10 +91,36 @@
  async function clear(keys){store.clear(keys);await writes;await chrome.storage.local.set({externalCache:structuredClone(store.entries)});}
  function trusted(sender){return sender.id===chrome.runtime.id&&sender.url===chrome.runtime.getURL('account.html');}
  function home(sender){try{const u=new URL(sender.url);return sender.id===chrome.runtime.id&&u.origin==='https://zjuers.com'&&['/','/index.html'].includes(u.pathname)&&sender.frameId===0;}catch{return false;}}
- const publicActions=new Set(['snapshot','refresh','preferences-get','preferences-set','open-account','clear-cache','logout']);
+ async function notifyThemes(skipTabId){
+  if(!chrome.tabs.query||!chrome.tabs.sendMessage)return;
+  try{const tabs=await chrome.tabs.query({url:['https://zjuers.com/*']});await Promise.allSettled(tabs.filter(tab=>tab.id!==skipTabId).map(tab=>chrome.tabs.sendMessage(tab.id,{type:'HOME_THEME_CHANGED'})));}catch{}
+ }
+ const publicActions=new Set(['snapshot','refresh','preferences-get','preferences-set','open-account','clear-cache','logout','themes-get','themes-set','theme-draft','greeting-set']);
  async function handle(message,sender){
   await storageReady;
   const action=message.action,own=trusted(sender);if(!own&&(!home(sender)||!publicActions.has(action)))throw E.problem('不允许此操作');
+  if(action==='themes-get'){
+   const saved=await chrome.storage.local.get(['update1Themes','update1Greeting','preferences']);
+   return {state:HomeThemeCore.normalizeState(saved.update1Themes,saved.preferences),greeting:HomeThemeCore.normalizeGreeting(saved.update1Greeting)};
+  }
+  if(action==='themes-set'){
+   if(Array.isArray(message.state?.themes)&&message.state.themes.length>30)throw E.problem('最多保存30个主题，请先删除不需要的主题');
+   const state=HomeThemeCore.normalizeState(message.state);
+   await chrome.storage.local.set({update1Themes:state});await notifyThemes(sender.tab?.id);return state;
+  }
+  if(action==='theme-draft'){
+   const theme=HomeThemeCore.normalizeTheme(message.theme);
+   if(theme.id==='default')throw E.problem('请另存为自定义主题');
+   if(typeof message.session!=='string'||!/^[a-f0-9]{32}$/.test(message.session))throw E.problem('主题会话无效，请刷新首页');
+   const saved=await chrome.storage.session.get('update1ThemeDrafts');
+   const drafts=saved.update1ThemeDrafts||{};drafts[message.session]={theme,updatedAt:Date.now()};
+   const sorted=Object.entries(drafts).sort((a,b)=>b[1].updatedAt-a[1].updatedAt).slice(0,20);
+   await chrome.storage.session.set({update1ThemeDrafts:Object.fromEntries(sorted)});return {};
+  }
+  if(action==='greeting-set'){
+   const greeting=HomeThemeCore.normalizeGreeting(message.value);
+   await chrome.storage.local.set({update1Greeting:greeting});await notifyThemes(sender.tab?.id);return greeting;
+  }
   if(action==='preferences-get')return (await chrome.storage.local.get('preferences')).preferences||{};
   if(action==='preferences-set'){await chrome.storage.local.set({preferences:HomeCore.preferences(message.value)});return {};}
   await initialize();
@@ -134,7 +160,7 @@
  }
  chrome.runtime.onMessage.addListener((message,sender,reply)=>{
   if(message?.type!=='HOME_EXTERNAL')return;
-  const mutating=['save-campus','save-weather','select-location','clear-weather','clear-cache','logout'].includes(message.action);
+  const mutating=['themes-set','theme-draft','greeting-set','save-campus','save-weather','select-location','clear-weather','clear-cache','logout'].includes(message.action);
   const work=mutating?(mutations=mutations.catch(()=>{}).then(()=>handle(message,sender))):handle(message,sender);
   work.then(value=>reply({ok:true,value}),error=>reply({ok:false,error:error.publicMessage||'操作失败，请稍后重试'}));return true;
  });

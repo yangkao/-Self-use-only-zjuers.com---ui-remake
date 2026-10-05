@@ -1,46 +1,32 @@
 # ZJUers 个人首页
 
-个人使用的 Microsoft Edge 起始页／新标签页扩展。以 **ZJUers 轻首页完整原站**和 **ZJUers 轻首页美化**为基础，在 zjuers.com 上应用个人界面。当前正式版本 **0.2.0**，2026-10-02 经用户审阅通过。
+个人使用的 Microsoft Edge 起始页／新标签页扩展，以 ZJUers 轻首页完整原站和原美化包为基础。当前正式版 **0.3.1**；0.3.0 已经用户审阅通过，0.3.1 按用户要求扩展 Edge 配色范围。
 
-## 使用与功能
+## 功能
 
-- 新建标签进入 zjuers.com，加载完整原站后应用个人界面；已识别的原站连接失败会替换为 Edge 默认新标签页。
-- 导航分组、搜索引擎选择、折叠记忆、内置静音循环视频壁纸、时间与问候。
-- 空白处右键进入次级界面，次级空白处左键返回；角落齿轮打开侧边设置。
-- 和风天气、一言哲学名句、本科课表／考试、学在浙大作业；研究生课程仅在有权限且取得有效内容时补充。
-- 信息源配置在扩展自身页面完成；主页面绘制后更新，缓存优先，失败和旧缓存明确标注。
+- 新标签进入 zjuers.com 并应用个人界面，连接失败时替换为原生新标签。
+- 紧凑导航、搜索引擎与分组折叠记忆；主次界面覆盖切换和侧边设置。
+- 本机主题管理、原路径图片／视频壁纸、代表色生成整套配色、视觉参数和分时问候；独立 Edge 配色主题包生成。
+- 和风天气、一言哲学名句、本科课表／考试、学在浙大作业及活动直达；有权限及有效内容时补充研究生课程。
+- 缓存优先，失败及旧缓存明确标注；凭据保存在当前扩展的本机存储，不随安装包携带。
 
-完整安装、升级和配置步骤见 [安装说明](docs/install.md)。权限、凭据方式和已知限制见 [正式交付说明](docs/release.md)。
+## 使用与构建
 
-## 相对原站和原美化包的主要改动
+[安装与升级](docs/install.md) · [正式交付](docs/release.md) · [实施方案](docs/implementation.md) · [过程复盘](docs/review.md)
 
-- 导航改为浙大、学术、实用工具、其它／关于本站四组；删除社交娱乐，合并工具分组，精简学习栏，并按确认清单增删工具链接；保留原站链接、智能跳转及悬停说明。
-- 以 nightTab 为主要视觉参考，采用紧凑导航卡片、组折叠、字体与搜索控件；青柠作为主次界面覆盖切换参考。
-- 内置西行妖视频，移除必应壁纸及壁纸切换；称呼固定为 Yangkao。
-- 增加次级信息页、侧边设置、课表月历、外部来源状态与缓存；校内接入参考 Celechron。
+正式包位于 `bin/release/zjuers-home-0.3.1/` 和同名 ZIP。既有安装路径 `bin/release/zjuers-home-0.2.0/` 保留，但内容为 0.3.1，便于原位更新。
 
-详细改动和阶段记录见 [implementation.md](docs/implementation.md)、[review.md](docs/review.md)，素材来源见 [SOURCES.md](srcs/extension/ui/media/SOURCES.md)。本项目仅用于个人，目标仓库为私有仓库。
-
-## 目录与构建
-
-| 路径 | 用途 |
-| --- | --- |
-| srcs/extension/ | 正式扩展源码及必要运行素材 |
-| srcs/extension/tests/、tests/ | 自动测试 |
-| srcs/build-preview.py | 重建现有安装目录 |
-| srcs/build-release.py | 核对验收基线并生成正式包 |
-| docs/ | 设计、接入、验收、安装与过程记录 |
-| bin/release/ | 本机正式交付目录，Git忽略 |
-
-使用既有 Node.js 与 Python，无第三方构建依赖：
+源码在 `srcs/extension/`；使用既有 Node.js、Python，无第三方构建依赖：
 
 ```text
-node --test srcs/extension/tests/*.test.cjs srcs/extension/*.test.cjs tests/campus.test.cjs
+node --test srcs/extension/tests/*.test.cjs srcs/extension/*.test.cjs tests/*.test.cjs
 python srcs/build-release.py
 ```
 
-内置视频通过 Git LFS 管理。未来从私有仓库克隆后，需取得 LFS 视频本体再构建。原始assets、历史版本、临时下载资料留在本机，不进入正式源码仓库；历史文档中的本机资料链接可能不随克隆提供。
+构建先核对 `docs/full-acceptance-manifest.json`，再生成正式目录、ZIP 和哈希清单。内置视频通过 Git LFS 管理，克隆后需取得视频本体。assets 原始资料保留，不覆盖或删除。
 
-## 验证状态
+## 验证与仓库
 
-用户已确认真实数据正常显示并通过最终界面审阅。72项自动测试及交付一致性检查通过；AI浏览器未独立完成真实Edge画面验证，不将通过范围扩大为所有认证分支、学校账号或浏览器版本。后续上传记录将在取得仓库地址后补充。
+101 项自动测试通过；正式包逐文件与验收基线核对、ZIP 完整性及哈希检查通过。0.3.1 的 Edge 浏览器配色效果待用户实机核对。
+
+项目仅供个人，仓库为私有。0.2.0 曾由用户上传到指定仓库，确认提交 `97d763189ee5cf254883459a4c63126d05babeea`；0.3.1 本轮未提交或上传。历史过程见 review.md。
