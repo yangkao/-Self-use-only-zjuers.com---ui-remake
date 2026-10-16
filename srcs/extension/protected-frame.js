@@ -1,0 +1,11 @@
+(()=>{
+ const source='https://zjuers.com';
+ const dirty=new Set(),jobs=new Set();
+ function state(){if(parent!==window)parent.postMessage({type:'SETTINGS_STATE',dirty:dirty.size>0,busy:jobs.size>0},source);}
+ globalThis.HomeFrameState={clean(form){if(form===document)dirty.clear();else dirty.delete(form);state();},busy(id,value){value?jobs.add(id):jobs.delete(id);state();}};
+ document.addEventListener('input',e=>{dirty.add(e.target.closest('form')||e.target);state();});
+ function commitTheme(){getComputedStyle(document.body).color;document.documentElement.dataset.themeReady='true';document.documentElement.classList.remove('theme-applying');}
+ if(parent===window)chrome.runtime.sendMessage({type:'HOME_EXTERNAL',action:'themes-get'}).then(reply=>{document.documentElement.classList.add('theme-applying');const t=reply?.value?.state?.themes.find(t=>t.id===reply.value.state.activeId);if(t)for(const [k,v]of Object.entries(t.colors))document.documentElement.style.setProperty('--theme-'+k,v);commitTheme();}).catch(()=>{commitTheme();});
+ window.addEventListener('message',e=>{if(e.source!==parent||e.origin!==source||e.data?.type!=='SETTINGS_THEME')return;document.documentElement.classList.add('theme-applying');for(const [key,value]of Object.entries(e.data.colors||{}))if(/^[a-zA-Z]+$/.test(key)&&/^#[0-9a-f]{6}$/i.test(value))document.documentElement.style.setProperty('--theme-'+key,value);for(const key of ['menuDuration','focusGlow'])if(Number.isFinite(e.data.visuals?.[key]))document.body.style.setProperty('--visual-'+key,e.data.visuals[key]+(key==='menuDuration'?'ms':''));if(['ZJUers Josefin','Segoe UI','Noto Sans CJK SC'].includes(e.data.font))document.body.style.fontFamily='"'+e.data.font+'", "Microsoft YaHei", sans-serif';commitTheme();});
+ if(parent!==window){document.documentElement.classList.add('embedded');const report=()=>parent.postMessage({type:'SETTINGS_HEIGHT',height:Math.ceil(document.querySelector('main').getBoundingClientRect().height)+12},source);new ResizeObserver(report).observe(document.querySelector('main'));document.fonts.ready.then(report);document.addEventListener('keydown',e=>{if(e.key==='Escape')parent.postMessage({type:'SETTINGS_ESCAPE'},source);});}
+})();

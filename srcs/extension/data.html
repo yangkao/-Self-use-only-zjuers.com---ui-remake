@@ -1,0 +1,8 @@
+﻿<!doctype html><html lang="zh-CN"><head><link rel="stylesheet" href="ui/controls.css"><style>html:not([data-theme-ready]){visibility:hidden;background:transparent!important}</style><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>首页配置 · ZJUers</title><link rel="stylesheet" href="account.css"></head><body><main>
+<h1>首页配置</h1>
+<div class="data-block"><h3>导出配置</h3><p class="help">包含导航、主题、搜索、问候及天气地点。密码、API Key、登录态与缓存不导出；本地壁纸需在新设备重新指定。</p><div class="form-actions"><button id="export">导出首页配置</button></div></div>
+<div class="data-block"><h3>导入配置</h3><p class="help" id="importHelp">文件校验成功后直接覆盖便携配置，导入前自动保留一份当前配置副本。信息源密码与 API Key 保留。</p><div class="file-picker"><button id="chooseFile" class="primary">选择配置文件</button><span id="fileName">尚未选择文件</span><input id="file" type="file" accept=".json,application/json" hidden aria-describedby="importHelp"></div></div>
+<div class="data-block"><h3>恢复副本</h3><p id="backupState" class="help">正在检查副本…</p><div class="form-actions"><button id="backup" disabled>下载导入前副本</button><button id="restore" disabled>恢复导入前副本</button></div></div>
+<output id="status" class="form-status" role="status" aria-live="polite"></output>
+<p class="standalone-links"><a href="https://zjuers.com/" target="_blank" rel="noopener">打开首页</a></p>
+<script src="protected-frame.js"></script><script src="data.js"></script></main><script src="ui/controls.js"></script></body></html>

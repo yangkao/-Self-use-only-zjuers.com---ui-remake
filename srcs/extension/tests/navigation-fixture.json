@@ -1,0 +1,693 @@
+{
+  "cat1": [
+    {
+      "id": "xzzd",
+      "href": "https://courses.zju.edu.cn/user/index",
+      "target": "_blank",
+      "label": "学在浙大"
+    },
+    {
+      "id": "jww",
+      "href": "https://zdbk.zju.edu.cn/",
+      "target": "_blank",
+      "label": "教务网(本)"
+    },
+    {
+      "id": "dxs",
+      "href": "https://chat.zju.edu.cn",
+      "target": "_blank",
+      "label": "大先生AI"
+    },
+    {
+      "id": "tsgyy",
+      "href": "https://booking.lib.zju.edu.cn/",
+      "target": "_blank",
+      "label": "图书馆预约"
+    },
+    {
+      "id": "zykt",
+      "href": "https://classroom.zju.edu.cn/",
+      "target": "_blank",
+      "label": "智云课堂"
+    },
+    {
+      "id": "wsbm",
+      "href": "https://zdbk.zju.edu.cn/kszx/index/initMenu.zf",
+      "target": "_blank",
+      "label": "网上报名"
+    },
+    {
+      "id": "jjw_yjs",
+      "href": "https://yjsy.zju.edu.cn/",
+      "target": "_blank",
+      "label": "教务网(研)"
+    },
+    {
+      "id": "yzzd",
+      "href": "https://research.zju.edu.cn",
+      "target": "_blank",
+      "label": "研在浙大"
+    },
+    {
+      "id": "pta",
+      "href": "https://pintia.cn/problem-sets?tab=0",
+      "target": "_blank",
+      "label": "PTA"
+    },
+    {
+      "id": "sztzw",
+      "href": "https://sztz.zju.edu.cn/",
+      "target": "_blank",
+      "label": "素质拓展网"
+    },
+    {
+      "id": "jxzygl",
+      "href": "https://zjuers.com/rd?url=http://jxzygl.zju.edu.cn/zypt/teacher/home",
+      "title": "校内普通教室借用。需要校园网或RVPN/WebVPN，加载可能较慢。已使用轻首页智能跳转。",
+      "target": "_blank",
+      "label": "教学资源管理"
+    },
+    {
+      "id": "jsxxcx",
+      "href": "https://person.zju.edu.cn/",
+      "target": "_blank",
+      "label": "教师信息查询"
+    },
+    {
+      "id": "qzzx",
+      "href": "https://qzonline.zju.edu.cn/hom/uni#/home",
+      "title": "自习空间查询、校内场馆借用。",
+      "target": "_blank",
+      "label": "启真在线"
+    },
+    {
+      "id": "jsgl",
+      "href": "http://kyjs.zju.edu.cn/preview",
+      "title": "科研训练与学科竞赛报名、公示、管理。",
+      "target": "_blank",
+      "label": "竞赛管理"
+    },
+    {
+      "id": "dwjl",
+      "href": "https://ugrs.zju.edu.cn/dwjlfwpt/",
+      "title": "对外交流项目通知、公示。",
+      "target": "_blank",
+      "label": "对外交流"
+    }
+  ],
+  "cat2": [
+    {
+      "id": "rvpn",
+      "href": "https://vpn.zju.edu.cn/",
+      "title": "学校RVPN系统已更新，旧版将逐步停用。如仍有旧版需求可访问https://rvpn.zju.edu.cn/",
+      "target": "_blank",
+      "label": "RVPN"
+    },
+    {
+      "id": "webvpn",
+      "href": "https://webvpn.zju.edu.cn/",
+      "target": "_blank",
+      "label": "WebVPN"
+    },
+    {
+      "id": "swrz",
+      "href": "http://net3.zju.edu.cn/",
+      "title": "校内ZJUWLAN上网认证页面",
+      "target": "_blank",
+      "label": "上网认证"
+    },
+    {
+      "id": "zbrj",
+      "href": "http://ms.zju.edu.cn/",
+      "target": "_blank",
+      "label": "正版软件"
+    },
+    {
+      "id": "zdyx",
+      "href": "https://zjuem.zju.edu.cn/",
+      "target": "_blank",
+      "label": "浙大邮箱"
+    },
+    {
+      "id": "wfgl",
+      "href": "https://myvpn.zju.edu.cn/",
+      "target": "_blank",
+      "label": "网费管理"
+    },
+    {
+      "id": "zdyp",
+      "href": "https://pan.zju.edu.cn/zjusso/",
+      "target": "_blank",
+      "label": "浙大云盘"
+    },
+    {
+      "id": "zdyq",
+      "href": "https://yuque.zju.edu.cn/",
+      "target": "_blank",
+      "label": "浙大语雀"
+    },
+    {
+      "id": "zdbd",
+      "href": "https://form.zju.edu.cn/",
+      "target": "_blank",
+      "label": "浙大表单"
+    },
+    {
+      "id": "zdfwpt",
+      "href": "https://service.zju.edu.cn/",
+      "target": "_blank",
+      "label": "浙大服务平台"
+    },
+    {
+      "id": "swfww",
+      "href": "https://xwfw.zju.edu.cn/",
+      "target": "_blank",
+      "label": "校务服务网"
+    },
+    {
+      "id": "zhfww",
+      "href": "https://zhfw.zju.edu.cn/",
+      "title": "需要校园网或RVPN/WebVPN",
+      "target": "_blank",
+      "label": "综合服务网"
+    },
+    {
+      "id": "xxjszx",
+      "href": "https://itc.zju.edu.cn/main.htm",
+      "target": "_blank",
+      "label": "信息技术中心"
+    },
+    {
+      "id": "zdkyjx",
+      "href": "https://mirrors.zju.edu.cn/",
+      "target": "_blank",
+      "label": "浙大开源镜像"
+    },
+    {
+      "id": "jsxxcx",
+      "href": "https://zjuers.com/rd?url=https://git.zju.edu.cn",
+      "title": "需要校园网或RVPN/WebVPN。已使用轻首页智能跳转。",
+      "target": "_blank",
+      "label": "ZJU Git"
+    }
+  ],
+  "cat3": [
+    {
+      "id": "cc98campus",
+      "href": "https://zjuers.com/rd?url=https://www.cc98.org/",
+      "title": "需要校园网或RVPN/WebVPN。已使用轻首页智能跳转。",
+      "target": "_blank",
+      "label": "CC98"
+    },
+    {
+      "id": "nhd",
+      "href": "http://www.nexushd.org",
+      "title": "需要校园网或RVPN/WebVPN",
+      "target": "_blank",
+      "label": "NexusHD"
+    },
+    {
+      "id": "ddxyq",
+      "href": "https://www.duoduo.link/",
+      "target": "_blank",
+      "label": "朵朵校友圈"
+    },
+    {
+      "id": "98webvpn",
+      "href": "https://webvpn.zju.edu.cn/https/77726476706e69737468656265737421e7e056d22433310830079bab/",
+      "title": "通过WebVPN访问，如卡顿请刷新",
+      "target": "_blank",
+      "label": "CC98(校外)"
+    },
+    {
+      "id": "eta",
+      "href": "https://zjuers.com/rd?url=http://eta.zju.edu.cn/",
+      "title": "需要校园网或RVPN/WebVPN。已使用轻首页智能跳转。",
+      "target": "_blank",
+      "label": "ETA"
+    },
+    {
+      "id": "bccx",
+      "href": "http://www.life.zju.edu.cn/_web/_apps/lightapp/busQuery/mobile/app/pub/index.html",
+      "target": "_blank",
+      "label": "班车查询"
+    },
+    {
+      "id": "tzzd",
+      "href": "https://zjuers.com/rd?url=http://tzzd.zju.edu.cn",
+      "title": "需要校园网或RVPN/WebVPN。已使用轻首页智能跳转。",
+      "target": "_blank",
+      "label": "团在浙大"
+    },
+    {
+      "id": "jcc",
+      "href": "https://cwcx.zju.edu.cn/WFManager/login.jsp",
+      "target": "_blank",
+      "label": "计财处"
+    },
+    {
+      "id": "jyfw",
+      "href": "https://www.career.zju.edu.cn/",
+      "target": "_blank",
+      "label": "就业服务"
+    },
+    {
+      "id": "xydt",
+      "href": "https://map.zju.edu.cn",
+      "target": "_blank",
+      "label": "校园地图"
+    },
+    {
+      "id": "bksy",
+      "href": "https://zjuers.com/rd?url=https://bksy.zju.edu.cn/",
+      "title": "需要校园网或RVPN/WebVPN。已使用轻首页智能跳转。",
+      "target": "_blank",
+      "label": "本科生院"
+    },
+    {
+      "id": "jjdh",
+      "href": "http://mapp.zju.edu.cn/lightapp/jjdh/www/app/home.html",
+      "target": "_blank",
+      "label": "紧急电话"
+    },
+    {
+      "id": "xljk",
+      "href": "http://www.xlzx.zju.edu.cn/",
+      "target": "_blank",
+      "label": "心理健康中心"
+    },
+    {
+      "id": "zdhq",
+      "href": "https://zulg.zju.edu.cn/",
+      "target": "_blank",
+      "label": "浙大后勤"
+    },
+    {
+      "id": "jczs",
+      "href": "https://we.zju.edu.cn/monitor/show_weixin.html",
+      "target": "_blank",
+      "label": "就餐指数"
+    }
+  ],
+  "cat4": [
+    {
+      "id": "zdtsg",
+      "href": "https://libweb.zju.edu.cn/",
+      "target": "_blank",
+      "label": "浙大图书馆"
+    },
+    {
+      "id": "qsxsss",
+      "href": "https://zju.summon.serialssolutions.com/",
+      "title": "建议校园网或RVPN/WebVPN",
+      "target": "_blank",
+      "label": "求是学术搜索"
+    },
+    {
+      "id": "zgzw",
+      "href": "https://www.cnki.net/",
+      "target": "_blank",
+      "label": "中国知网"
+    },
+    {
+      "id": "ggxs",
+      "href": "https://scholar.google.com/",
+      "title": "大陆访问需要VPN，也可尝试上方搜索框的学术镜/学术2进行搜索",
+      "target": "_blank",
+      "label": "谷歌学术"
+    },
+    {
+      "id": "byxs",
+      "href": "https://cn.bing.com/academic",
+      "target": "_blank",
+      "label": "必应学术"
+    },
+    {
+      "id": "bdxs",
+      "href": "https://xueshu.baidu.com/",
+      "target": "_blank",
+      "label": "百度学术"
+    },
+    {
+      "id": "wpw",
+      "href": "https://www.cqvip.com/",
+      "target": "_blank",
+      "label": "维普网"
+    },
+    {
+      "id": "axs",
+      "href": "https://www.ixueshu.com/",
+      "target": "_blank",
+      "label": "爱学术"
+    },
+    {
+      "id": "wfsj",
+      "href": "https://www.wanfangdata.com.cn/index.html",
+      "target": "_blank",
+      "label": "万方数据"
+    },
+    {
+      "id": "github",
+      "href": "https://github.com/",
+      "title": "网络不佳时请考虑使用代理或镜像",
+      "target": "_blank",
+      "label": "Github"
+    },
+    {
+      "id": "webofscience",
+      "href": "https://www.webofscience.com/",
+      "title": "建议校园网或RVPN/WebVPN",
+      "target": "_blank",
+      "label": "WOS"
+    },
+    {
+      "id": "scihub",
+      "href": "https://sci-hub.ru/",
+      "title": "网络不佳时请考虑使用代理或镜像",
+      "target": "_blank",
+      "label": "Sci-Hub"
+    }
+  ],
+  "cat5": [
+    {
+      "id": "ygmh",
+      "href": "https://ol.woobx.cn/",
+      "target": "_blank",
+      "label": "一个木函"
+    },
+    {
+      "id": "qqtool",
+      "href": "https://tool.browser.qq.com/",
+      "target": "_blank",
+      "label": "在线工具箱"
+    },
+    {
+      "id": "ttzx",
+      "href": "https://tuotuzju.com/",
+      "target": "_blank",
+      "label": "拓途浙享"
+    },
+    {
+      "id": "bdfy",
+      "href": "https://fanyi.baidu.com/",
+      "target": "_blank",
+      "label": "百度翻译"
+    },
+    {
+      "id": "ggfy",
+      "href": "https://translate.google.com/",
+      "title": "无法访问时请考虑使用代理",
+      "target": "_blank",
+      "label": "谷歌翻译"
+    },
+    {
+      "id": "slcfy",
+      "href": "https://lab.magiconch.com/nbnhhsh/",
+      "target": "_blank",
+      "label": "缩略词复原"
+    },
+    {
+      "id": "dwz",
+      "href": "https://sina.lt/",
+      "target": "_blank",
+      "label": "短网址工具"
+    },
+    {
+      "id": "QRcodetool",
+      "href": "https://cli.im/text",
+      "target": "_blank",
+      "label": "二维码生成器"
+    },
+    {
+      "id": "wjkt",
+      "href": "https://airportal.cn/",
+      "target": "_blank",
+      "label": "文件空投"
+    },
+    {
+      "id": "wjgszh",
+      "href": "https://convertio.co/zh/",
+      "title": "无法访问或网络不佳时请考虑使用代理或镜像",
+      "target": "_blank",
+      "label": "文件格式转换"
+    },
+    {
+      "id": "pdftool",
+      "href": "https://www.ilovepdf.com/zh-cn",
+      "target": "_blank",
+      "label": "PDF工具箱"
+    },
+    {
+      "id": "imgedit",
+      "href": "https://www.iloveimg.com/zh-cn",
+      "target": "_blank",
+      "label": "在线图片编辑"
+    }
+  ],
+  "cat6": [
+    {
+      "id": "mooc",
+      "href": "https://www.icourse163.org/",
+      "target": "_blank",
+      "label": "MOOC"
+    },
+    {
+      "id": "zhs",
+      "href": "https://www.zhihuishu.com/",
+      "target": "_blank",
+      "label": "智慧树"
+    },
+    {
+      "id": "xxqg",
+      "href": "https://www.xuexi.cn/",
+      "target": "_blank",
+      "label": "学习强国"
+    },
+    {
+      "id": "bilibili",
+      "href": "https://www.bilibili.com/",
+      "target": "_blank",
+      "label": "Bilibili"
+    },
+    {
+      "id": "aqy",
+      "href": "https://www.iqiyi.com/",
+      "target": "_blank",
+      "label": "爱奇艺"
+    },
+    {
+      "id": "txsp",
+      "href": "https://v.qq.com/",
+      "target": "_blank",
+      "label": "腾讯视频"
+    },
+    {
+      "id": "yk",
+      "href": "https://www.youku.com/",
+      "target": "_blank",
+      "label": "优酷"
+    },
+    {
+      "id": "mgtv",
+      "href": "https://www.mgtv.com/",
+      "target": "_blank",
+      "label": "芒果TV"
+    },
+    {
+      "id": "ysw",
+      "href": "https://tv.cctv.com/",
+      "target": "_blank",
+      "label": "CCTV"
+    },
+    {
+      "id": "yk",
+      "href": "https://www.huya.com/",
+      "target": "_blank",
+      "label": "虎牙直播"
+    },
+    {
+      "id": "mgtv",
+      "href": "https://www.douyu.com/",
+      "target": "_blank",
+      "label": "斗鱼直播"
+    },
+    {
+      "id": "ysw",
+      "href": "https://live.qq.com/",
+      "target": "_blank",
+      "label": "企鹅体育"
+    }
+  ],
+  "cat7": [
+    {
+      "id": "txwd",
+      "href": "https://docs.qq.com/desktop/",
+      "target": "_blank",
+      "label": "腾讯文档"
+    },
+    {
+      "id": "bdwk",
+      "href": "https://wenku.baidu.com/",
+      "target": "_blank",
+      "label": "百度文库"
+    },
+    {
+      "id": "xiumi",
+      "href": "https://xiumi.us/",
+      "target": "_blank",
+      "label": "秀米"
+    },
+    {
+      "id": "wolfram",
+      "href": "https://www.wolframalpha.com/",
+      "target": "_blank",
+      "label": "Wolfram"
+    },
+    {
+      "id": "myscript",
+      "href": "https://webdemo.myscript.com/",
+      "target": "_blank",
+      "label": "Myscript"
+    },
+    {
+      "id": "geogebra",
+      "href": "https://www.geogebra.org/",
+      "target": "_blank",
+      "label": "Geogebra"
+    },
+    {
+      "id": "wjx",
+      "href": "https://www.wjx.cn/",
+      "target": "_blank",
+      "label": "问卷星"
+    },
+    {
+      "id": "flvdl",
+      "href": "https://snapany.com/zh/bilibili",
+      "target": "_blank",
+      "label": "视频下载"
+    },
+    {
+      "id": "zzgj",
+      "href": "https://tool.chinaz.com/",
+      "target": "_blank",
+      "label": "站长工具"
+    }
+  ],
+  "cat8": [
+    {
+      "id": "zhihu",
+      "href": "https://www.zhihu.com/hot",
+      "target": "_blank",
+      "label": "知乎"
+    },
+    {
+      "id": "db",
+      "href": "https://www.douban.com/",
+      "target": "_blank",
+      "label": "豆瓣"
+    },
+    {
+      "id": "nga",
+      "href": "https://bbs.nga.cn/",
+      "target": "_blank",
+      "label": "NGA"
+    },
+    {
+      "id": "wbrs",
+      "href": "https://s.weibo.com/top/summary",
+      "target": "_blank",
+      "label": "微博热搜"
+    },
+    {
+      "id": "txty",
+      "href": "https://sports.qq.com/",
+      "target": "_blank",
+      "label": "腾讯体育"
+    },
+    {
+      "id": "hpw",
+      "href": "https://www.hupu.com/",
+      "target": "_blank",
+      "label": "虎扑网"
+    },
+    {
+      "id": "Pixivic",
+      "href": "https://pixivic.com/",
+      "title": "网络不佳时请考虑使用代理或镜像",
+      "target": "_blank",
+      "label": "Pixivic"
+    },
+    {
+      "id": "jd",
+      "href": "https://www.jd.com/",
+      "target": "_blank",
+      "label": "京东商城"
+    },
+    {
+      "id": "taobao",
+      "href": "https://www.taobao.com/",
+      "target": "_blank",
+      "label": "淘宝网"
+    }
+  ],
+  "cat9": [
+    {
+      "id": "wlcs",
+      "href": "https://wangsuceshi.bmcx.com/",
+      "target": "_blank",
+      "label": "网络测速"
+    },
+    {
+      "id": "sshb",
+      "href": "https://zh.flightaware.com/live/",
+      "target": "_blank",
+      "label": "实时航班"
+    },
+    {
+      "id": "zxbdsm",
+      "href": "https://www.virscan.org/",
+      "target": "_blank",
+      "label": "在线病毒扫描"
+    },
+    {
+      "id": "zdxl",
+      "href": "./banner/浙江大学2026-2027学年校历.pdf",
+      "target": "_blank",
+      "label": "浙大校历"
+    },
+    {
+      "id": "about",
+      "href": "http://speedtest.zju.edu.cn/",
+      "title": "仅能在校网状态下访问",
+      "target": "_blank",
+      "label": "校网测速"
+    },
+    {
+      "id": "ssyqsm",
+      "href": "https://zhfw.zju.edu.cn/65686/list.htm",
+      "title": "需要校园网或RVPN/WebVPN",
+      "target": "_blank",
+      "label": "浙大黄页"
+    },
+    {
+      "id": "ssyqsm",
+      "href": "https://www.cc98.org/topic/4979979",
+      "title": "需要校园网或RVPN/WebVPN",
+      "target": "_blank",
+      "label": "搜索引擎说明"
+    },
+    {
+      "id": "about",
+      "href": "./about",
+      "target": "_blank",
+      "label": "关于本站&反馈"
+    },
+    {
+      "id": "blackmode",
+      "href": "./black",
+      "target": "_self",
+      "label": "# 深色模式 #"
+    }
+  ]
+}

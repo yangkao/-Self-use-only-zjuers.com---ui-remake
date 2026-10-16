@@ -1,0 +1,12 @@
+/* Public, normalized detail models. Raw source payloads and credentials never leave providers. */
+(function(root){
+ 'use strict';
+ const number=v=>Number.isFinite(v)?v:null,quantity=q=>q&&Number.isFinite(q.value)?{value:q.value,unit:typeof q.unit==='string'?q.unit:''}:null;
+ const condition=c=>({text:typeof c?.text==='string'?c.text:null,code:c?.code??null});
+ function hourly(d){if(!Array.isArray(d?.hours))throw ExternalCore.problem('小时天气格式不匹配');return {hours:d.hours.slice(0,24).map(h=>({time:h.forecastTime,temperature:number(h.temperature?.value),...condition(h.condition),probability:number(h.precipitation?.probability),precipitation:quantity(h.precipitation?.amount),humidity:number(h.humidity),wind:h.wind||null})),attributions:d.metadata?.attributions||[]};}
+ function rain(d){if(!Array.isArray(d?.minutely))throw ExternalCore.problem('分钟降水格式不匹配');return {summary:typeof d.summary==='string'?d.summary:'',updateTime:d.updateTime,points:d.minutely.slice(0,36).map(p=>({time:p.fxTime,precipitation:Number.isFinite(Number(p.precip))?Number(p.precip):null,type:p.type})),attributions:d.refer?.sources||[]};}
+ function alerts(d){if(!Array.isArray(d?.alerts))throw ExternalCore.problem('天气预警格式不匹配');return {alerts:d.alerts.slice(0,30).map(a=>({title:a.headline||'',description:a.description||'',sender:a.senderName||'',issued:a.issuedTime,expires:a.expireTime,severity:typeof a.severity==='string'?a.severity:a.severity?.text||a.severity?.level||'',url:a.web||null})),attributions:d.metadata?.attributions||[]};}
+ function air(d){if(!Array.isArray(d?.indexes))throw ExternalCore.problem('空气质量格式不匹配');return {indexes:d.indexes.map(i=>({code:i.code,name:i.name,aqi:number(i.aqi),display:i.aqiDisplay,category:i.category,primaryPollutant:i.primaryPollutant?.code||null,advice:i.health?.advice?.generalPopulation||''})),pollutants:(d.pollutants||[]).map(p=>({code:p.code,name:p.name,concentration:quantity(p.concentration)})),attributions:d.metadata?.attributions||[]};}
+ function daily(d){const result=ExternalCore.weatherDaily(d);result.days=result.days.slice(0,7).map((day,i)=>{const r=d.days[i];return {...day,night:condition(r.nighttime?.condition),probability:number(r.daytime?.precipitation?.probability),precipitation:quantity(r.daytime?.precipitation?.amount),wind:r.daytime?.wind||null,humidity:number(r.humidity),uv:number(r.uvIndexMax),sunrise:r.astro?.sunrise||null,sunset:r.astro?.sunset||null};});return result;}
+ const api={hourly,rain,alerts,air,daily};root.HomeDetailsCore=api;if(typeof module!=='undefined')module.exports=api;
+})(globalThis);
