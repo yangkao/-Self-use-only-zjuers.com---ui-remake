@@ -4,6 +4,8 @@
 
 这是个人定制项目，现公开源代码供修改与分发；与浙江大学、ZJUers、nightTab、Celechron、CC98 等项目没有官方隶属或背书关系。
 
+[在线交互演示](https://yangkao.github.io/-Self-use-only-zjuers.com---ui-remake/) · [演示范围与部署说明](docs/demo.md)
+
 ## 功能
 
 - 新标签进入 zjuers.com，读取原站导航并应用定制界面；原站连接失败时创建原生新标签并关闭失败页。

@@ -1,0 +1,59 @@
+name: Deploy homepage demo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/deploy-demo.yml'
+      - 'srcs/demo/**'
+      - 'srcs/build-demo.py'
+      - 'srcs/extension/**'
+      - 'tests/demo.test.cjs'
+  workflow_dispatch:
+  schedule:
+    # 00:23 UTC = 08:23 Asia/Shanghai. GitHub schedules can be delayed.
+    - cron: '23 0 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homepage-demo-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Refresh Bing daily metadata
+        run: python srcs/demo/refresh-bing.py
+      - name: Build and verify static demo
+        run: python srcs/build-demo.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: bin/demo
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

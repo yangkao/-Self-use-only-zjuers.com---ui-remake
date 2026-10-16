@@ -1,0 +1,33 @@
+/* SPDX-License-Identifier: GPL-3.0-only. Same-origin demonstration frames, no real forms. */
+(()=>{
+ 'use strict';
+ if(parent===window||!parent.HomeDemo){document.body.textContent='请从在线演示的设置中打开此页面。';return;}
+ const D=parent.HomeDemo,origin=location.origin,kind=document.body.dataset.frame;
+ const $=id=>document.getElementById(id),post=data=>parent.postMessage(data,origin);
+ const sendHeight=()=>post({type:kind==='editor'?'EDITOR_HEIGHT':'SETTINGS_HEIGHT',height:Math.ceil(document.body.getBoundingClientRect().height)+20});
+ function colors(c){for(const [key,value]of Object.entries(c||{}))if(/^#[0-9a-f]{6}$/i.test(value))document.documentElement.style.setProperty('--theme-'+key,value);document.documentElement.dataset.themeReady='true';}
+ colors(D.theme().themes.find(t=>t.id===D.theme().activeId).colors);
+ new ResizeObserver(sendHeight).observe(document.body);document.addEventListener('keydown',e=>{if(e.key==='Escape')post({type:'SETTINGS_ESCAPE'});});
+ window.addEventListener('message',e=>{if(e.source!==parent||e.origin!==origin)return;if(e.data?.type==='SETTINGS_THEME')colors(e.data.colors);});
+ const make=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n;};
+ if(kind==='account'){
+  const section=new URL(location.href).searchParams.get('section')||'weather',descriptions={weather:['和风天气','API Host','API Key','显示地点'],campus:['浙大统一身份认证','学号','密码'],webvpn:['WebVPN','用户名','密码'],cc98:['CC98','应用 ID']},[title,...fields]=descriptions[section]||descriptions.weather;
+  $('title').textContent=title;for(const text of fields){const label=make('label',text),input=make('input');input.disabled=true;input.placeholder='请在正式扩展中配置';input.autocomplete='off';if(/密码|Key/.test(text))input.type='password';label.append(input);$('fields').append(label);}
+  $('summary').textContent=section==='weather'?'示例地点：杭州 · 西湖；7天、24小时、降水和空气质量数据已就绪。':section==='cc98'?'示例：7条未读、10条虚构帖子。设备授权仅在正式扩展中使用。':section==='campus'?'示例：10门课程、18条排课规则、272次课程记录、6项考试、12项作业。':'演示不发起WebVPN登录，不收集或保存账号密码。';
+ }
+ if(kind==='data')$('reset').onclick=()=>{if(confirm('恢复演示默认设置？'))D.reset();};
+ if(kind==='thumbnail'){const state=D.theme(),id=new URL(location.href).searchParams.get('id'),theme=state.themes.find(t=>t.id===id),video=theme?.wallpaper.type==='video'&&D.media.has(theme.wallpaper.reference);const img=make(video?'video':'img');img.crossOrigin='anonymous';img.alt='';img.style.cssText='width:100%;height:100%;object-fit:cover';if(video){img.muted=true;img.playsInline=true;}img.addEventListener(video?'loadeddata':'load',()=>{try{const c=document.createElement('canvas');c.width=320;c.height=180;c.getContext('2d').drawImage(img,0,0,320,180);post({type:'THEME_THUMBNAIL',image:c.toDataURL('image/jpeg',.75)});if(video){img.pause();img.removeAttribute('src');img.load();}}catch{}},{once:true});img.src=D.mediaURL(theme?.wallpaper);document.body.style.cssText='padding:0;margin:0;overflow:hidden;height:100vh';document.body.replaceChildren(img);return;}
+ if(kind!=='editor')return;
+ let theme,wallpaper,node,ratio=innerWidth/innerHeight,drag;
+ const mediaReady=()=>node?.tagName==='VIDEO'?node.readyState>=2:node?.complete&&node.naturalWidth>0;
+ function update(){post({type:'EDITOR_UPDATE',wallpaper});}
+ function paint(){if(node?.tagName==='VIDEO'){node.pause();node.removeAttribute('src');node.load();}node?.remove();node=make(wallpaper.type==='video'&&D.media.has(wallpaper.reference)?'video':'img');node.crossOrigin='anonymous';if(node.tagName==='VIDEO'){node.muted=true;node.autoplay=true;node.loop=true;node.playsInline=true;}node.src=D.mediaURL(wallpaper);node.style.objectPosition=`${wallpaper.crop?.x??50}% ${wallpaper.crop?.y??50}%`;$('preview').replaceChildren(node);$('fileName').textContent=wallpaper.name||(D.bing?.loaded?'必应每日壁纸 · '+D.bing.date:'后备演示壁纸 · 自绘山水');}
+ function resize(){const width=$('preview').clientWidth;$('preview').style.height=(width/Math.max(.3,ratio))+'px';sendHeight();}
+ async function select(file){if(!/^(image|video)\//.test(file.type)){$('status').textContent='请选择图片或视频。';return;}wallpaper=D.addFile(file);paint();update();$('status').textContent='仅在当前演示页面临时预览，不上传。可拖动调整位置，并生成配色。';}
+ function palette(){if(!mediaReady()){$('status').textContent='媒体仍在加载，请稍后生成配色。';return;}const width=node.videoWidth||node.naturalWidth,height=node.videoHeight||node.naturalHeight,target=$('preview').clientWidth/$('preview').clientHeight;let w=width,h=height;if(width/height>target)w=height*target;else h=width/target;const x=(width-w)*(wallpaper.crop?.x??50)/100,y=(height-h)*(wallpaper.crop?.y??50)/100;const c=document.createElement('canvas');c.width=96;c.height=54;const ctx=c.getContext('2d');ctx.drawImage(node,x,y,w,h,0,0,96,54);post({type:'EDITOR_UPDATE',wallpaper,colors:parent.HomeThemeCore.paletteFromPixels([ctx.getImageData(0,0,96,54).data])});$('status').textContent='已根据当前裁切区域生成整套配色。';}
+ $('choose').onclick=()=>$('file').click();$('file').onchange=()=>{if($('file').files[0])void select($('file').files[0]);};$('palette').onclick=palette;$('builtin').onclick=()=>{wallpaper={type:'bing',path:'',crop:{x:50,y:50}};paint();update();};
+ $('preview').ondragover=e=>{e.preventDefault();$('preview').classList.add('dragging');};$('preview').ondragleave=()=>$('preview').classList.remove('dragging');$('preview').ondrop=e=>{e.preventDefault();$('preview').classList.remove('dragging');if(e.dataTransfer.files[0])void select(e.dataTransfer.files[0]);};
+ $('preview').onpointerdown=e=>{drag={x:e.clientX,y:e.clientY,crop:{x:wallpaper.crop?.x??50,y:wallpaper.crop?.y??50}};$('preview').setPointerCapture(e.pointerId);};$('preview').onpointermove=e=>{if(!drag)return;wallpaper.crop={x:Math.max(0,Math.min(100,drag.crop.x-(e.clientX-drag.x)/$('preview').clientWidth*100)),y:Math.max(0,Math.min(100,drag.crop.y-(e.clientY-drag.y)/$('preview').clientHeight*100))};node.style.objectPosition=`${wallpaper.crop.x}% ${wallpaper.crop.y}%`;};$('preview').onpointerup=()=>{if(drag){drag=null;update();}};
+ window.addEventListener('message',e=>{if(e.source!==parent||e.origin!==origin)return;const m=e.data;if(m?.type==='EDITOR_THEME'){theme=m.theme;wallpaper=structuredClone(theme.wallpaper);ratio=m.ratio||ratio;colors(theme.colors);paint();resize();}if(m?.type==='EDITOR_VISUALS'){colors(m.colors);node?.style.setProperty('filter',`brightness(${m.visuals.brightness})`);}if(m?.type==='EDITOR_VIEWPORT'){ratio=m.ratio||ratio;resize();}});
+ wallpaper={type:'bing',path:'',crop:{x:50,y:50}};paint();window.addEventListener('resize',resize);resize();
+})();

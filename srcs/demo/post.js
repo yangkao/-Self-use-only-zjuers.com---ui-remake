@@ -1,0 +1,1 @@
+const index=Number(new URL(location.href).searchParams.get('id'));if(new URL(location.href).searchParams.has('id')){const item=HomeDemoData.create().entries.cc98Top.data.items[index];if(item)document.getElementById('postTitle').textContent=item.title;}
