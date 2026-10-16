@@ -2,9 +2,23 @@
 
 面向 Microsoft Edge 的个人起始页扩展。基于 [ZJUers 轻首页](https://zjuers.com/)完整页面及「ZJUers 轻首页美化」调整导航、视觉和交互，加入主题、次级信息界面与小组件。当前正式版 **0.4.0**。
 
-这是个人定制项目，现公开源代码供修改与分发；与浙江大学、ZJUers、nightTab、Celechron、CC98 等项目没有官方隶属或背书关系。
+<p align="center">
+  <a href="https://yangkao.github.io/-Self-use-only-zjuers.com---ui-remake/">
+    <img src="docs/images/demo-entry.svg" width="320" height="64" alt="打开在线交互演示，无需安装或账号">
+  </a>
+</p>
 
-[在线交互演示](https://yangkao.github.io/-Self-use-only-zjuers.com---ui-remake/) · [演示范围与部署说明](docs/demo.md)
+<p align="center">
+  <strong><a href="https://yangkao.github.io/-Self-use-only-zjuers.com---ui-remake/">立即体验在线演示 ↗</a></strong>
+  · <a href="https://github.com/yangkao/-Self-use-only-zjuers.com---ui-remake/releases/latest">下载扩展</a>
+  · <a href="docs/demo.md">演示范围与说明</a>
+</p>
+
+[![主界面：必应壁纸、搜索、分类导航与右侧小组件；点击打开在线演示](docs/images/demo-main.webp)](https://yangkao.github.io/-Self-use-only-zjuers.com---ui-remake/)
+
+> 无需安装、无需账号，点击上方按钮或截图即可体验。演示中的天气、课表、考试、作业与 CC98 信息均为合成示例；截图使用 2026-10-16 的必应壁纸，在线壁纸随每日部署更新。
+
+这是个人定制项目，现公开源代码供修改与分发；与浙江大学、ZJUers、nightTab、Celechron、CC98 等项目没有官方隶属或背书关系。
 
 ## 功能
 
@@ -15,6 +29,22 @@
 - 次级天气、课表、考试、作业；天气详情与学期课表总览。
 - 可配置首页小组件：天气、课程、考试、作业、CC98 未读与十大、专注计时、秒表、间歇计时及日期倒计时。
 - 首页配置导入导出、唯一一份导入前恢复副本；凭据、令牌和信息缓存不进入配置导出。
+
+## 界面预览
+
+### 次级信息界面
+
+天气、当天课表、近期考试与作业集中呈现；天气和课表可打开详情。
+
+[![次级界面：完整示例天气、五个课程时段、考试和作业](docs/images/demo-secondary.webp)](https://yangkao.github.io/-Self-use-only-zjuers.com---ui-remake/)
+
+### 主题与设置
+
+侧边设置面板容纳主题、壁纸裁切、配色、布局与信息源配置。在线演示可体验临时壁纸与配色，账号表单禁用。
+
+[![主题设置：分类侧栏、本机主题、壁纸裁切与自动配色](docs/images/demo-settings.webp)](https://yangkao.github.io/-Self-use-only-zjuers.com---ui-remake/)
+
+配图均来自示例数据演示。壁纸摄影署名：© lightphoto/Getty Images，通过必应每日壁纸展示；相关权利归原权利人所有。
 
 ## 安装与使用
 
