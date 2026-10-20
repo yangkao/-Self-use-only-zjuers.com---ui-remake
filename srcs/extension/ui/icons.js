@@ -2,7 +2,12 @@
  'use strict';
  const references={"courses": {"peak": 255, "width": 87, "bg": 68, "box": [9, 16, 65, 60], "height": 100, "file": "reference-courses.png"}, "assignments": {"peak": 255, "width": 63, "bg": 41, "box": [11, 7, 44, 48], "height": 60, "file": "reference-assignments.png"}, "air": {"peak": 255, "width": 85, "bg": 68, "box": [13, 12, 54, 52], "height": 78, "file": "reference-air.png"}, "工": {"peak": 236, "width": 67, "bg": 41, "box": [10, 6, 45, 39], "height": 49, "file": "reference-tools.png"}, "习": {"peak": 212, "width": 52, "bg": 41, "box": [11, 14, 29, 26], "height": 57, "file": "reference-study.png"}, "scholarship": {"peak": 212, "width": 45, "bg": 61, "box": [11, 8, 24, 28], "height": 48, "file": "reference-scholarship.png"}, "exam": {"peak": 177, "width": 76, "bg": 41, "box": [15, 6, 45, 45], "height": 54, "file": "reference-exam.png"}};
  let instance=0;
+ function transparentReference(file,width,height,box,bg,peak,x,y,w,h){
+  const id='cc98-ink-'+(++instance),scale=255/(peak-bg),offset=-bg/(peak-bg);
+  return `<defs><filter id="${id}" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ${scale} 0 ${offset}" result="ink"/><feComposite in="ink" in2="SourceGraphic" operator="in" result="shape"/><feFlood flood-color="currentColor"/><feComposite operator="in" in2="shape"/></filter></defs><svg x="${x}" y="${y}" width="${w}" height="${h}" viewBox="${box}" preserveAspectRatio="xMidYMid meet"><image href="${chrome.runtime.getURL('assets/'+file)}" width="${width}" height="${height}" filter="url(#${id})"/></svg>`;
+ }
  const shapes={
+  refresh:'<path d="M20 3.5v5.5h-5.5M20 9a8.5 8.5 0 1 0 .5 5"/>',
   scholarship:'<rect x="5" y="2.5" width="14" height="19" rx="1.8"/><path d="M8 7h8v3H8zM18 6h3M18 11h3M18 16h3"/>',
   教:'<path fill="currentColor" stroke="none" d="M2 21h20v-2H2ZM3 3h4v15H3Zm6 2h5v13H9Zm7-3h5v16h-5Z"/><path stroke="var(--theme-background)" d="M10.5 8h2M17 6h3"/>',
   浙:'<path fill="currentColor" stroke="none" fill-rule="evenodd" d="m12 2 7 5v2h4v13H1V9h4V7Zm0 3-5 3.6V20h3v-6h4v6h3V8.6ZM3 12v2h2v-2Zm0 5v2h2v-2Zm16-5v2h2v-2Zm0 5v2h2v-2Z"/><circle cx="12" cy="9.5" r="1.5"/>',
@@ -22,7 +27,7 @@
    const id='reference-ink-'+(++instance),scale=255/(ref.peak-ref.bg),offset=-ref.bg/(ref.peak-ref.bg);
    return `<defs><filter id="${id}" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ${scale} 0 ${offset}" result="ink"/><feFlood flood-color="currentColor"/><feComposite operator="in" in2="ink"/></filter></defs><svg x="1" y="1" width="22" height="22" viewBox="${ref.box.join(' ')}" preserveAspectRatio="xMidYMid meet"><image href="${chrome.runtime.getURL('assets/'+ref.file)}" width="${ref.width}" height="${ref.height}" filter="url(#${id})"/></svg>`;
   }
-  if(key==='cc98'||key==='cc98Top')return `<image href="${chrome.runtime.getURL('assets/cc98.ico')}" x="0" y="0" width="19" height="19"/><rect x="12" y="13" width="12" height="11" rx="2" fill="var(--theme-panel)" stroke="none"/>`+(key==='cc98'?'<g stroke-width="1.4"><rect x="13.5" y="15" width="9" height="7" rx="1"/><path d="m14 16 4 3 4-3"/></g>':'<path fill="currentColor" stroke="none" d="M18 12c2 3 5 5 5 8a5 5 0 0 1-10 0c0-2 1-4 3-5v4c2-1 3-3 2-7Z"/>');
+  if(key==='cc98'||key==='cc98Top')return transparentReference('cc98.ico',45,32,'0 0 45 32',0,255,0,0,19,19)+(key==='cc98'?transparentReference('reference-cc98-unread.png',76,51,'17 10 42 29',41,212,13,15,11,8):transparentReference('reference-cc98-hot.png',87,91,'21 13 44 66',68,255,15,12,9,12));
   return shapes[key];
  }
  function svg(key){return `<svg viewBox="0 0 24 24" aria-hidden="true" data-home-icon="${key}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${content(key)||''}</svg>`;}

@@ -85,3 +85,6 @@
 /* Keep the chevron centered independently of shared button padding. */
 .app .collapse-button{padding:0;line-height:0;box-sizing:border-box;display:grid;place-items:center;flex-shrink:0}
 .app .collapse-button svg{display:block;margin:0}
+
+/* Explicit marker geometry avoids tiny font-dependent middle dots. */
+.nav-custom>.section-header .section-title::after,.nav-card.nav-custom .nav-card-label::after,.link-grid a.nav-custom::after{content:'';display:inline-block;width:5px;height:5px;flex:0 0 5px;border-radius:50%;background:var(--theme-primary);margin-left:6px;vertical-align:middle;pointer-events:none}

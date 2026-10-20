@@ -12,6 +12,13 @@
   const builtin=theme.wallpaper.type==='builtin';
 
   if(disposed)return;
+  if(theme.wallpaper.type==='solid'){
+   if(!/^#[a-f0-9]{6}$/i.test(theme.wallpaper.color))throw new Error('color');
+   const canvas=document.createElement('canvas');canvas.width=320;canvas.height=180;
+   const context=canvas.getContext('2d');context.fillStyle=theme.wallpaper.color;context.fillRect(0,0,320,180);
+   const img=document.createElement('img');img.alt='';img.src=canvas.toDataURL('image/jpeg',.75);canvas.width=canvas.height=0;
+   document.body.replaceChildren(img);if(parent!==window)parent.postMessage({type:'THEME_THUMBNAIL',image:img.src},'https://zjuers.com');return;
+  }
   const daily=theme.wallpaper.type==='bing'||builtin;const meta=daily?(typeof HomeBing!=='undefined'?await HomeBing.call('peek'):null):null;const url=daily?(meta?await HomeBing.url(meta):chrome.runtime.getURL('assets/fallback.svg')):await HomeFileHandles.url(theme.wallpaper);if(url.startsWith('blob:'))objectURL=url;
   if(!url)throw new Error('path');
   const video=theme.wallpaper.type==='video';

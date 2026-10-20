@@ -1,14 +1,18 @@
 /* SPDX-License-Identifier: GPL-3.0-only. Web demo local adapter; no credential APIs. */
 (function(root){
  'use strict';
- const node=typeof module!=='undefined',load=name=>require('../extension/'+name+'.js');
+ const node=typeof module!=='undefined',load=name=>require(require('node:path').resolve(process.env.HOME_DEMO_SOURCE||require('node:path').join(__dirname,'../extension'),name+'.js'));
  const N=node?load('navigation-core'):root.HomeNavigation,T=node?load('theme-core'):root.HomeThemeCore,H=node?load('core'):root.HomeCore,E=node?load('external-core'):root.ExternalCore,W=node?load('widget-core'):root.HomeWidgetsCore,D=node?require('./data.js'):root.HomeDemoData;
  function resourceURL(base,path){const index=path.search(/[?#]/),name=index<0?path:path.slice(0,index),suffix=index<0?'':path.slice(index),mapping={'account.html':'frames/account.html','data.html':'frames/data.html','wallpaper-editor.html':'frames/editor.html','thumbnail.html':'frames/thumbnail.html'};return new URL((mapping[name]||'app/'+name)+suffix,base).href;}
+ function networkAllowed(base,url){try{const b=new URL(base),u=new URL(url,b);return (u.origin===b.origin&&u.pathname.startsWith(b.pathname))||(u.protocol==='https:'&&['cn.bing.com','www.bing.com'].includes(u.hostname)&&u.pathname==='/th');}catch{return false;}}
+ function forumResourceURL(base,url){try{const u=new URL(url);if(u.protocol!=='https:'||!['www.cc98.org','cc98.org'].includes(u.hostname))return null;return new URL('post.html?example='+encodeURIComponent(u.pathname.slice(1)+u.search),base).href;}catch{return null;}}
  function create({storage,now=Date.now,baseURL='https://example.invalid/demo/',onChange=()=>{}}){
+  const C=node?(require('node:fs').existsSync(require('node:path').resolve(process.env.HOME_DEMO_SOURCE||require('node:path').join(__dirname,'../extension'),'cc98-core.js'))?load('cc98-core'):null):root.CC98Core;
+  const cc98=C?.createDataLayer({now,read:q=>D.forum(q,now())});
   const prefix='zjuers-demo-v1:',drafts=new Map();let queue=Promise.resolve(),snapshotDay='',snapshot;
   const get=(key,fallback)=>{try{const value=storage.getItem(prefix+key);return value===null?fallback:JSON.parse(value);}catch{return fallback;}};
   const set=(key,value)=>storage.setItem(prefix+key,JSON.stringify(value));
-  function themeState(){const state=T.normalizeState(get('themes',null));if(!get('searchOpacity20',false)){for(const theme of state.themes)theme.visuals.searchOpacity=20;set('themes',state);set('searchOpacity20',true);}state.themes[0].colors=get('bingPalette',null)||T.paletteFromPixels([[40,95,100,255],[65,123,125,255],[28,50,65,255]]);return state;}
+  function themeState(){const state=T.normalizeState(get('themes',null));if(!get('searchOpacity30',false)){state.themes[0].visuals.searchOpacity=30;set('themes',state);set('searchOpacity30',true);}state.themes[0].colors=get('bingPalette',null)||T.paletteFromPixels([[40,95,100,255],[65,123,125,255],[28,50,65,255]]);return state;}
   function widgets(){let saved=get('widgets',null);if(!saved){saved=W.defaults();saved.instances.push({id:'demo-cc98-top',kind:'cc98Top',enabled:true,config:{}});set('widgets',saved);}const state=W.validate(saved),runtime=get('runtime',{});for(const i of state.instances){const c=W.clock(i,runtime[i.id],now());if(c.done&&!runtime[i.id]?.completedAt&&runtime[i.id]?.running)runtime[i.id]={...runtime[i.id],running:false,elapsed:W.duration(i),completedAt:now(),notified:true};}set('runtime',runtime);return {state,runtime};}
   function full(){const key=D.dayOf(now());if(key!==snapshotDay){snapshotDay=key;snapshot=D.create(now(),baseURL);}return structuredClone(snapshot);}
   function notify(type){queueMicrotask(()=>onChange({type}));}
@@ -27,6 +31,9 @@
    }
    if(m.type!=='HOME_EXTERNAL')throw Error('演示不提供此扩展功能');
    const action=m.action;
+   if(action==='cc98-query'&&cc98)return cc98.query(m.instance,m.query,{force:m.force===true});
+   if(action==='cc98-release'){cc98?.release(m.instance);return {};}
+   if(action==='cc98-cancel')return {};
    if(action==='preferences-get')return H.preferences(get('preferences',{}));
    if(action==='preferences-set'){const p=H.preferences(m.value);set('preferences',p);return p;}
    if(action==='themes-get')return {state:themeState(),greeting:T.normalizeGreeting(get('greeting',{}))};
@@ -41,7 +48,7 @@
    throw Error('在线演示不收集凭据，也不提供配置导入导出。请安装扩展后使用此功能。');
   }
   function send(message){const run=queue.catch(()=>{}).then(()=>handle(message));queue=run;return run.then(value=>({ok:true,value}),error=>({ok:false,error:error.message,code:error.code}));}
-  return {send,get,set,themeState,drafts,full};
+  return {send,get,set,themeState,drafts,full,cc98};
  }
- const api={create,resourceURL};root.HomeDemoBackend=api;if(node)module.exports=api;
+ const api={create,resourceURL,networkAllowed,forumResourceURL};root.HomeDemoBackend=api;if(node)module.exports=api;
 })(globalThis);

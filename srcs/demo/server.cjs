@@ -5,4 +5,4 @@ function create(directory){const base=path.resolve(directory),types={'.html':'te
  }catch{res.writeHead(400);res.end('Bad request');}
 });}
 module.exports={create};
-if(require.main===module){const directory=path.resolve(__dirname,'../../bin/demo'),port=Number(process.argv[2]||8765);create(directory).listen(port,'127.0.0.1',()=>console.log('Demo: http://127.0.0.1:'+port+'/'));}
+if(require.main===module){const directory=path.resolve(__dirname,'../..',process.argv[3]||'bin/demo'),port=Number(process.argv[2]||8765);create(directory).listen(port,'127.0.0.1',()=>console.log('Demo: http://127.0.0.1:'+port+'/'));}

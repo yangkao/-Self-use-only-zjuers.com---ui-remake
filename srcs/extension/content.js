@@ -19,7 +19,7 @@
     const root = host.attachShadow({mode:'open'});
     const stylesheet = document.createElement('link'); stylesheet.rel = 'stylesheet'; stylesheet.href = resource('ui/style.css');
     const styleReady = new Promise((resolve,reject) => {
-      let pending=6;const loaded=()=>{if(--pending===0)resolve();};
+      let pending=8;const loaded=()=>{if(--pending===0)resolve();};
       stylesheet.onload = () => {report('内置样式加载完成');loaded();};
       stylesheet.onerror = () => reject(new Error('无法加载界面样式'));
       root.append(stylesheet);
@@ -29,6 +29,8 @@
       const detailStyle=document.createElement('link');detailStyle.rel='stylesheet';detailStyle.href=resource('ui/details.css');detailStyle.onload=loaded;detailStyle.onerror=()=>reject(new Error('无法加载详情样式'));root.append(detailStyle);
       const widgetStyle=document.createElement('link');widgetStyle.rel='stylesheet';widgetStyle.href=resource('ui/widgets.css');widgetStyle.onload=loaded;widgetStyle.onerror=()=>reject(new Error('无法加载组件样式'));root.append(widgetStyle);
       const navStyle=document.createElement('link');navStyle.rel='stylesheet';navStyle.href=resource('ui/navigation.css');navStyle.onload=loaded;navStyle.onerror=()=>reject(new Error('无法加载导航样式'));root.append(navStyle);
+      const cc98Style=document.createElement('link');cc98Style.rel='stylesheet';cc98Style.href=resource('ui/cc98.css');cc98Style.onload=loaded;cc98Style.onerror=()=>reject(new Error('无法加载论坛样式'));root.append(cc98Style);
+      const surfaceStyle=document.createElement('link');surfaceStyle.rel='stylesheet';surfaceStyle.href=resource('ui/surfaces.css');surfaceStyle.onload=loaded;surfaceStyle.onerror=()=>reject(new Error('无法加载材质样式'));root.append(surfaceStyle);
     });
     const bodyReady = wait(()=>Boolean(document.body)).then(()=>document.body.append(host));
     // Fonts must be registered outside the shadow tree for browser font lookup.

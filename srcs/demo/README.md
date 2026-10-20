@@ -1,26 +1,26 @@
 # ZJUers 个人首页 · 在线交互演示
 
-演示复用 0.4.0 正式扩展的界面，使用独立的网页适配层。无需安装扩展，不读取扩展存储，不收集凭据，不请求学校、CC98 或付费天气服务。
+演示复用指定扩展源码的界面，使用独立的网页适配层。无需安装扩展，不读取扩展存储，不收集凭据，不请求学校、CC98 或付费天气服务。
 
 ## 本地审阅
 
 在项目根目录运行（使用已有 Python 和 Node，无新增依赖）：
 
 ```powershell
-python srcs/build-demo.py
-node srcs/demo/server.cjs
+python srcs/build-demo.py --source srcs/extension --output bin/demo
+node srcs/demo/server.cjs 8765 bin/demo
 ```
 
 打开 <http://127.0.0.1:8765/>。关闭终端或按 Ctrl+C 停止服务。不要直接双击 index.html：页面需要 HTTP 服务加载模块和模板。
 
-`bin/demo/` 是完整静态网站，`bin/zjuers-home-0.4.0-demo.zip` 解压后即为网站根目录。无需后台服务器，可以部署到 GitHub Pages 的项目子目录。已准备部署工作流，首次远端启用由维护者执行。搜索栏默认不透明度为20%，已有演示设置会一次性迁移到此值。
+`bin/demo/` 是完整静态网站，`bin/zjuers-home-1.0.0-demo.zip` 解压后即为网站根目录。构建版本读取源目录的 `manifest.json`，公开构建输出到 `bin/demo/`。无需后台服务器，可以部署到 GitHub Pages 的项目子目录。已准备部署工作流，首次远端启用由维护者执行。搜索栏默认不透明度为30%，已有演示设置会一次性迁移到此值。
 
 ## 示例范围
 
 - 10门课程，18条排课规则，16周共272次课程记录；示例当天5个时段。
 - 12项未来作业、6项未来考试（次级卡片默认显示近期部分）。
 - 7天天气、24小时预报、24个降水点、空气质量、明确标识的虚构预警。
-- 7条示例未读和10条虚构帖子，帖子分别链接到本地示例页。
+- 7条示例未读、10条十大、最多500条新帖浏览、12个版面及概览、消息和签到日历；论坛入口链接到本地示例页。
 - 名句为原创演示文案，不冒用哲学家署名。
 
 示例由日期动态生成。默认时钟首次从当天09:20走时，便于任何时间体验当天剩余课程；可切换真实时间。演示时钟不是实际当前时间，请勿用这些信息安排出行或学习。
@@ -37,7 +37,7 @@ demo 从必应官方图片地址加载壁纸，保留摄影版权信息，通过
 
 ```powershell
 python srcs/demo/refresh-bing.py
-python srcs/build-demo.py
+python srcs/build-demo.py --source srcs/extension --output bin/demo
 ```
 
 当前源码快照日期为2026-10-16。`.github/workflows/deploy-demo.yml`在部署时更新元数据，每日北京时间08:23定时重新部署，支持手动触发；GitHub任务可能延迟。工作流启用方式见[部署说明](../../docs/demo.md)。单次上传的静态ZIP不会自行取得次日元数据。
@@ -45,10 +45,11 @@ python srcs/build-demo.py
 ## 检查
 
 ```powershell
+$env:HOME_DEMO_SOURCE=(Resolve-Path srcs/extension).Path
 node --test tests/demo.test.cjs
-node srcs/demo/check.cjs
+node srcs/demo/check.cjs --dir bin/demo --offline-bing
 ```
 
-浏览器检查使用隔离的无头 Edge 资料，覆盖示例数量、必应加载／配色结果、导航编辑、组件添加、主题保存／恢复、课表／天气详情及禁用的凭据表单，报告和截图写入 `temp/demo-check-*`。不访问个人浏览器资料。
+浏览器检查使用隔离的无头 Edge 资料，覆盖示例数量、必应加载／配色结果、导航编辑、组件添加、主题保存／恢复、课表／天气详情、禁用的凭据表单、CC98 的500条浏览上限及消息和签到、三个材质与纯色壁纸。报告和截图写入 `temp/demo-check-*`。`--offline-bing` 显式阻断必应图片以检查后备壁纸；去掉该参数可检查实际加载结果。无头浏览器的液态玻璃可能回退适度融合，报告会记录请求材质和实际材质。不访问个人浏览器资料。
 
 源码许可及引用内容的说明沿用正式版；网站随附 `app/LICENSE`、`app/THIRD_PARTY_NOTICES.md` 和 `app/licenses/`。

@@ -1,6 +1,15 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { accepts, initialize } = require('../ui/wallpaper.js');
+const { accepts, initialize, mapSurfaceLayout } = require('../ui/wallpaper.js');
+
+test('surface coordinates map viewport positions into the actual iframe including offset and scale',()=>{
+ const frame={clientWidth:800,clientHeight:600,getBoundingClientRect:()=>({left:20,top:30,width:1000,height:750})};
+ const layout={panels:[{id:'stable',x:120,y:155,w:250,h:125,radius:10}],material:'liquid'};
+ const result=mapSurfaceLayout(layout,frame);
+ assert.deepEqual(result.panels,[{id:'stable',x:80,y:100,w:200,h:100,radius:8}]);
+ assert.equal(result.width,800);assert.equal(result.height,600);assert.equal(layout.panels[0].x,120);
+ assert.equal(mapSurfaceLayout(layout,{...frame,clientWidth:0}),null);
+});
 test('wallpaper replies authenticate source, origin, token and active request', () => {
   const frame = { contentWindow: {} };
   const origin = 'chrome-extension://example';

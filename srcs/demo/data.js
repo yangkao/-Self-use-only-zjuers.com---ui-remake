@@ -35,5 +35,28 @@
    cc98:entry({systemCount:1,atCount:2,replyCount:3,messageCount:1,total:7,url:new URL('post.html',base).href}),cc98Top:entry({items:topics,url:new URL('post.html',base).href}),
    quote:entry({text:'给思考留一点空白，也给今天留一点期待。',author:'演示文案',from:'示例内容（非哲学家原句）'})}};
  }
- const api={create,dayOf};root.HomeDemoData=api;if(typeof module!=='undefined')module.exports=api;
+ // On-demand synthetic reads: no stored responses, real users or network access.
+ function forum(q,now=Date.now()){
+  const names=['校园生活','学术交流','体育运动','摄影与旅行','读书与音乐','技术分享','课程讨论','美食地图','社团活动','闲话闲说','失物招领','实习经验'];
+  const stamp=i=>new Date(now-i*370000).toISOString();
+  const url=id=>'https://www.cc98.org/topic/'+id;
+  if(q.kind==='boards')return {kind:q.kind,items:Array.from({length:3},(_,g)=>({id:String(g+1),name:['校园与生活','兴趣与成长','学习与交流'][g],boards:names.slice(g*4,g*4+4).map((name,i)=>({id:String(g*4+i+1),name}))}))};
+  if(q.kind==='profile')return {kind:q.kind,profile:{id:'900001',name:'Demo 示例同学',signature:'虚构资料 · 给学习和生活留一点空白。',portraitUrl:'',wealth:1286,prestige:12,fanCount:38,popularity:16,postCount:246,receivedLikeCount:135,signInCardCount:3}};
+  if(q.kind==='unread')return {kind:q.kind,systemCount:1,atCount:2,replyCount:3,messageCount:1,total:7};
+  if(q.kind==='signin')return {kind:q.kind,hasSignedInToday:true,lastSignInCount:8,lastSignInTime:stamp(0),lastReward:12};
+  if(q.kind==='month'){
+   const current=dayOf(now),month=String(q.year)+'-'+String(q.month).padStart(2,'0'),last=month===current.slice(0,7)?Number(current.slice(-2)):month<current.slice(0,7)?new Date(Date.UTC(q.year,q.month,0)).getUTCDate():0;
+   return {kind:q.kind,year:q.year,month:q.month,items:Array.from({length:last},(_,i)=>({year:q.year,month:q.month,day:i+1,reward:8+(i%5),useCard:i===2})).filter(i=>i.day%7!==0)};
+  }
+  const count=q.kind==='top'?10:q.kind==='new'?540:q.kind==='board'?67:q.kind==='contacts'?26:q.kind==='conversation'?53:34;
+  const from=q.from||0,size=q.kind==='top'?10:q.size||20,length=Math.max(0,Math.min(size,count-from));
+  const items=Array.from({length},(_,i)=>{const n=from+i,b=Number(q.boardId)||n%names.length+1,id=String((q.kind==='board'?2000000+b*1000:1000000)+n);
+   if(['top','new','board'].includes(q.kind))return {id,title:'示例 '+(n+1)+' · '+names[b-1]+'中的一次发现与交流',url:url(id),authorName:'示例同学 '+(n%23+1),isAnonymous:n%11===0,time:stamp(n+4),lastPostTime:stamp(n),hitCount:120+n*17,boardId:String(b),boardName:names[b-1]};
+   if(q.kind==='contacts')return {id:String(101+n),userId:String(101+n),name:'示例联系人 '+(n+1),time:stamp(n),lastContent:'Demo 示例会话 · 周末读书活动还在筹备中。'};
+   if(q.kind==='conversation')return {id:String(Number(q.peerId)*1000+n),senderId:n%2===0?q.peerId:'900001',time:stamp(count-n),content:'Demo 示例会话 '+(n+1)+'：这是完全虚构的讨论内容，仅用于展示只读消息排版。'};
+   return {id:q.kind+'-'+n,title:'示例 '+(q.kind==='system'?'系统通知':'校园话题')+' '+(n+1),topicId:id,url:url(id),time:stamp(n),userName:'示例同学 '+(n%12+1),floor:n+2,content:q.kind==='system'?'示例系统通知：欢迎参与校园社区交流。':''};
+  });
+  return {kind:q.kind,items,rawCount:items.length};
+ }
+ const api={create,dayOf,forum};root.HomeDemoData=api;if(typeof module!=='undefined')module.exports=api;
 })(globalThis);

@@ -4,7 +4,7 @@
  async function call(action,args={}){
   let r;try{r=await chrome.runtime.sendMessage({type:'HOME_EXTERNAL',action,...args});}
   catch(error){if(/Extension context invalidated/i.test(error?.message||''))throw new Error('扩展已重新加载，当前首页的连接已失效。请刷新当前首页后重试。');throw error;}
-  if(!r?.ok)throw new Error(r?.error||'扩展后台暂未响应');return r.value;
+  if(!r?.ok)throw Object.assign(new Error(r?.error||'扩展后台暂未响应'),{code:r?.code});return r.value;
  }
  const dateOf=(value=Date.now())=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(value));
  function clock(value){return value&&Number.isFinite(Date.parse(value))?new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value)):'';}
@@ -142,7 +142,7 @@
    renderSettingsStatus();
   }
   function renderSettingsStatus(){settings.querySelectorAll('[data-source-status]').forEach(el=>{el.textContent=statusText(state.entries[el.dataset.sourceStatus]);});settings.querySelectorAll('[data-config-status]').forEach(el=>{el.textContent=el.dataset.configStatus==='campus'?(state.config.campusConfigured?'已保存账户 · 自动连接':'尚未配置账户'):(state.config.location?`${state.config.location.adm2||''} ${state.config.location.name}`:'尚未配置地点');});settings.querySelectorAll('[data-weather-references]').forEach(el=>{el.replaceChildren();const refs=[...new Set(['now','daily','rain'].flatMap(k=>state.entries[k]?.data?.attributions||[]))];if(!refs.length)el.textContent='暂无额外归属说明';for(const [i,url]of refs.entries()){if(i)el.append(' · ');el.append(link(`来源说明${refs.length>1?i+1:''}`,url));}});}
-  function button(text,action,keys){const b=element('button',text,'setting-button');b.type='button';b.dataset.externalAction=action;if(keys)b.dataset.keys=keys.join(',');return b;}
+  function button(text,action,keys){const b=element('button',text,'setting-button');b.type='button';b.dataset.externalAction=action;if(keys)b.dataset.keys=keys.join(',');if(action==='refresh'){const symbol=HomeIcons.element('refresh');symbol.classList.add('refresh-icon');b.prepend(symbol);}return b;}
   function settingsSection(title){const section=element('section',undefined,'settings-section');section.append(element('h3',title,'settings-section-title'));settings.append(section);return section;}
   function settingRow(parent,label,control){const r=element('div',undefined,'setting-row');r.append(element('div',label),control);parent.append(r);return r;}
   function renderSettings(){
@@ -200,10 +200,18 @@
   function resume(){clearTimeout(resumeTimer);resumeTimer=setTimeout(()=>{if(!document.hidden&&!disposed){render();void snapshot().then(start).catch(()=>{});}},80);}
   document.addEventListener('visibilitychange',()=>{clearTimeout(timer);clearTimeout(resumeTimer);if(!document.hidden){resume();timer=setTimeout(tick,60000);}});
   window.addEventListener('focus',resume);
-  let dataTimer;const dataChanged=m=>{if(m.type!=='HOME_DATA_CHANGED')return;clearTimeout(dataTimer);if(!document.hidden)dataTimer=setTimeout(()=>void snapshot().catch(()=>{}),100);};chrome.runtime.onMessage?.addListener(dataChanged);
+  let dataTimer;const dataChanged=m=>{if(m.type==='HOME_CC98_RESET'){view.__cc98?.reset();return;}if(m.type!=='HOME_DATA_CHANGED')return;clearTimeout(dataTimer);if(!document.hidden)dataTimer=setTimeout(()=>void snapshot().catch(()=>{}),100);};chrome.runtime.onMessage?.addListener(dataChanged);
   window.addEventListener('pagehide',()=>{disposed=true;clearTimeout(timer);clearTimeout(resumeTimer);clearTimeout(dataTimer);chrome.runtime.onMessage?.removeListener(dataChanged);},{once:true});
   async function tick(){if(disposed)return;if(!document.hidden){try{if(busy)await snapshot();else if(app.classList.contains('is-secondary')||view.__widgets?.hasSources)await start();}catch{}}if(!document.hidden)timer=setTimeout(tick,busy?1500:60000);}
   if(globalThis.HomeDetails)HomeDetails.initialize(view,{getState:()=>state,call,statusText,weatherIcon});
+  if(globalThis.HomeCC98){
+   const instance=crypto.randomUUID();
+   HomeCC98.create({root:view,read:async(query,{force,signal,requestId})=>{
+    if(signal.aborted)throw Object.assign(new Error('取消读取'),{name:'AbortError'});
+    const cancel=()=>{void call('cc98-cancel',{instance,requestId}).catch(()=>{});};signal.addEventListener('abort',cancel,{once:true});
+    try{return await call('cc98-query',{instance,requestId,query,force});}finally{signal.removeEventListener('abort',cancel);}
+   },release:()=>call('cc98-release',{instance}).catch(()=>{})});
+  }
   render();renderSettings();void snapshot().catch(()=>{});
   if(app.classList.contains('is-secondary'))void start();
   setTimeout(()=>{if('requestIdleCallback'in window)requestIdleCallback(()=>{void start();},{timeout:1000});else void start();},1500);

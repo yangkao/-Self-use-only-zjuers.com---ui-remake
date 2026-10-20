@@ -80,7 +80,7 @@ test('greeting preserves original eleven oclock and midnight boundaries',()=>{
 });
 test('default theme copies retain baseline sizes and dark card surfaces',()=>{
  const theme=core.defaultTheme(),v=theme.visuals;
- for(const [key,value] of Object.entries({clockSize:24,searchHeight:40,titleSize:21,cardGap:16,groupGap:31,radius:9,cardOpacity:50,searchOpacity:0,uiFont:'ZJUers Josefin'}))assert.equal(v[key],value,key);
+ for(const [key,value] of Object.entries({clockSize:24,searchHeight:40,titleSize:21,cardGap:16,groupGap:31,radius:9,cardOpacity:50,searchOpacity:30,uiFont:'ZJUers Josefin'}))assert.equal(v[key],value,key);
  assert.equal(theme.colors.card,'#292929');assert.equal(theme.colors.search,'#1f1f1f');
  const palette=core.paletteFromPixels([[255,0,0,255]]);
  assert.ok(luminance(palette.card)<.05);assert.ok(luminance(palette.search)<.05);

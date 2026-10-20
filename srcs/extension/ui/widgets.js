@@ -47,7 +47,7 @@
   function button(text,title,fn){const b=el('button',text);b.type='button';b.title=title;b.setAttribute('aria-label',title);b.onclick=fn;return b;}
   function paintCopy(copy,i,v){
    const signature=JSON.stringify([v.title,v.small,v.items,v.entry?.status,v.entry?.error]);if(copy.dataset.value===signature)return;copy.dataset.value=signature;
-   copy.replaceChildren(el('strong',v.title),el('small',v.small));
+   copy.replaceChildren(el('strong',i.kind==='exams'?'最近考试':v.title),...(i.kind==='exams'&&v.title!==W.definitions.exams.name?[el('span',v.title,'widget-exam-name')]:[]),el('small',v.small));
    if(v.items){const entries=el('div',undefined,'widget-entries');for(const [index,item]of v.items.entries()){
     const entry=i.kind==='cc98Top'?el('a'):button('',item.title,()=>activate(i,entry));entry.className='widget-entry';if(i.kind==='cc98Top'){const url=HomeExternal.safeLink(item.url);if(url)entry.href=url;entry.target='_blank';entry.rel='noopener noreferrer';entry.title=item.title;}
     entry.append(el('span',(i.kind==='cc98Top'?`${index+1}. `:'')+item.title,'widget-entry-title'));
@@ -70,7 +70,7 @@
     }
     existing?.remove();
     const d=W.definitions[i.kind],row=el('div',undefined,'widget-row'),b=button('',d.name,()=>{if(pinned.has(i.id)){pinned.delete(i.id);suppressed.add(i.id);row.classList.remove('is-open');}else{pinned.add(i.id);suppressed.delete(i.id);row.classList.add('is-open');}b.setAttribute('aria-pressed',String(pinned.has(i.id)));b.setAttribute('aria-expanded',String(row.classList.contains('is-open')));});b.className='widget-button';b.dataset.widgetId=i.id;const content=el('span',undefined,'widget-copy'),detail=['courses','assignments','cc98Top'].includes(i.kind)?el('div'):button('',d.name+'详情',()=>activate(i,detail));detail.className='widget-detail';detail.id='widget-detail-'+i.id;detail.append(content);b.setAttribute('aria-controls',detail.id);b.setAttribute('aria-pressed',String(pinned.has(i.id)));b.setAttribute('aria-expanded',String(pinned.has(i.id)));row.classList.toggle('is-open',pinned.has(i.id)||(hovered.has(i.id)&&!suppressed.has(i.id)));b.setAttribute('aria-expanded',String(row.classList.contains('is-open')));
-    row.classList.toggle('widget-multi',['courses','assignments','cc98Top'].includes(i.kind));
+    row.classList.toggle('widget-multi',['courses','assignments','cc98Top','exams'].includes(i.kind));
     row.dataset.instanceId=i.id;row.dataset.signature=JSON.stringify(i);
     const expand=()=>{hovered.add(i.id);if(!suppressed.has(i.id)){row.classList.add('is-open');b.setAttribute('aria-expanded','true');}};const collapse=()=>{hovered.delete(i.id);suppressed.delete(i.id);if(!pinned.has(i.id)){row.classList.remove('is-open');b.setAttribute('aria-expanded','false');}};row.addEventListener('pointerenter',expand);row.addEventListener('pointerleave',collapse);row.addEventListener('focusin',e=>{if(e.target.matches(':focus-visible'))expand();});row.addEventListener('focusout',e=>{if(!row.contains(e.relatedTarget)&&!row.matches(':hover'))collapse();});
     if(d.source){const value=dataText(i);b.append(value.weather?HomeExternal.weatherIcon(value.weather.text,value.weather.code):icon(i.kind));paintCopy(content,i,value);if(value.loading)row.classList.add('loading');}
