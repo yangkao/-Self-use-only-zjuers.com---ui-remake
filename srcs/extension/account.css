@@ -4,3 +4,5 @@ html.embedded{background:transparent;overflow:hidden}html.embedded body{backgrou
 
 /* Keep the entire input focus ring inside embedded viewport edges. */
 input:focus-visible{outline-offset:-2px;border-color:var(--theme-accent,#d3a3e3)}
+
+.refresh-icon{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;flex:none}button:has(.refresh-icon){display:inline-flex;align-items:center;gap:6px}

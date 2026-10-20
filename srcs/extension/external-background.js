@@ -26,17 +26,20 @@
   if(!permitted)throw E.problem('请求地址不在已授权的信息源内');
   const scope=scopes[parsed.hostname==='webvpn.zju.edu.cn'?'webvpn':parsed.hostname==='v1.hitokoto.cn'?'quote':parsed.hostname.endsWith('.qweatherapi.com')?'weather':'campus'],epoch=scope.epoch;
   return limit(async()=>{
-   if(epoch!==scope.epoch)throw E.problem('请求已取消','cancelled');
-   const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),18000);
+   if(epoch!==scope.epoch||options.signal?.aborted)throw E.problem('请求已取消','cancelled');
+   const controller=new AbortController();let timedOut=false;const timeout=setTimeout(()=>{timedOut=true;controller.abort();},18000);
+   const onAbort=()=>controller.abort();options.signal?.addEventListener('abort',onAbort,{once:true});
    scope.controllers.add(controller);
    try{
     const response=await fetch(url,{...options,...(calendar?{credentials:'omit',redirect:'error'}:{}),signal:controller.signal});
     if(response.type==='opaqueredirect')return response;
-    const text=await response.text();
+    // Clone the native response: HTTP 901 is valid on the wire but rejected by new Response().
+    const copy=response.clone();
+    await response.text();
     if(response.status===429)throw E.problem('信息源请求受限，稍后再试','rate-limit');
-    const copy=new Response([204,205,304].includes(response.status)?null:text,{status:response.status,statusText:response.statusText,headers:response.headers});
-    Object.defineProperty(copy,'url',{value:response.url});return copy;
-   }finally{clearTimeout(timeout);scope.controllers.delete(controller);}
+    return copy;
+   }catch(error){if(timedOut&&!options.signal?.aborted&&epoch===scope.epoch)throw E.problem('信息源响应超时，请重试','timeout');throw error;}
+   finally{clearTimeout(timeout);scope.controllers.delete(controller);options.signal?.removeEventListener('abort',onAbort);}
   });
  }
  function serviceCallback(service){
@@ -56,6 +59,15 @@
  }
  const vpn=globalThis.WebVPNProvider?.create({request,credentials:()=>config.webvpn});
  const cc98=globalThis.CC98Provider?.create({request,vpn,storage:chrome.storage,clientId:()=>config.cc98?.clientId||'2dcb3ae1-c60b-4fb1-66d5-08df2824e910'});
+ // Deliberately separate from persistent ExternalCore.cache: private text never reaches storage.
+ const cc98Data=globalThis.CC98Core?.createDataLayer({read:(q,options)=>cc98.query(q,options)}),cc98Pending=new Map(),cc98Owners=new Map();
+ function cc98Owner(sender,instance){
+  if(typeof instance!=='string'||!/^[-a-zA-Z0-9]{16,40}$/.test(instance))throw E.problem('CC98 实例无效');
+  return `${sender.tab?.id??'internal'}:${sender.documentId||new URL(sender.url).pathname}:${instance}`;
+ }
+ function cc98Release(owner){for(const [key,item]of cc98Pending)if(item.owner===owner){item.controller.abort();cc98Pending.delete(key);}cc98Owners.delete(owner);cc98Data?.release(owner);}
+ function cc98Clear(){for(const item of cc98Pending.values())item.controller.abort();cc98Pending.clear();cc98Owners.clear();cc98Data?.clear();if(typeof HomeBroadcast==='function')void Promise.resolve(HomeBroadcast('HOME_CC98_RESET')).catch(()=>{});}
+ if(chrome.tabs?.onRemoved)chrome.tabs.onRemoved.addListener(tabId=>{for(const [owner,tab]of cc98Owners)if(tab===tabId)cc98Release(owner);});
  const campus=CampusProvider.create({request,now:()=>Date.now(),serviceCallback});
  async function weather(path,params={}){
   const cfg=config.weather;if(!cfg?.key||!cfg?.host)throw E.problem('请在设置中配置和风天气','configuration');
@@ -111,7 +123,7 @@
   if(!chrome.tabs.query||!chrome.tabs.sendMessage)return;
   try{const tabs=await chrome.tabs.query({url:['https://zjuers.com/*']});await Promise.allSettled(tabs.filter(tab=>tab.id!==skipTabId).map(tab=>chrome.tabs.sendMessage(tab.id,{type:'HOME_THEME_CHANGED'})));}catch{}
  }
- const publicActions=new Set(['snapshot','refresh','preferences-get','preferences-set','open-account','clear-cache','logout','themes-get','themes-set','theme-draft','greeting-set','open-data','wallpaper-viewport','weather-details','semester-details']);
+ const publicActions=new Set(['snapshot','refresh','preferences-get','preferences-set','open-account','clear-cache','logout','themes-get','themes-set','theme-draft','greeting-set','open-data','wallpaper-viewport','weather-details','semester-details','cc98-query','cc98-cancel','cc98-release','cc98-data-status']);
  async function handle(message,sender){
   await storageReady;
   const action=message.action,own=trusted(sender);if(!own&&(!home(sender)||!publicActions.has(action)))throw E.problem('不允许此操作');
@@ -126,9 +138,10 @@
    return saved?.screen===key?{...saved,measured:true}:{measured:false};
   }
   if(action==='themes-get'){
-   const saved=await chrome.storage.local.get(['update1Themes','update1Greeting','preferences','themeAudioMigration1']);
+   const saved=await chrome.storage.local.get(['update1Themes','update1Greeting','preferences','themeAudioMigration1','searchOpacity30Migration']);
    const state=HomeThemeCore.normalizeState(saved.update1Themes,saved.preferences);
    if(typeof HomeBingBackground!=='undefined'){const daily=await HomeBingBackground.peek();if(daily?.colors)state.themes[0].colors=daily.colors;}
+   if(!saved.searchOpacity30Migration){state.themes[0].visuals.searchOpacity=30;await chrome.storage.local.set({update1Themes:state,searchOpacity30Migration:true});}
    if(JSON.stringify(state)!==JSON.stringify(saved.update1Themes))await chrome.storage.local.set({update1Themes:state});
    if(!saved.themeAudioMigration1){if(saved.update1Themes)for(const theme of state.themes)theme.muted=false;await chrome.storage.local.set({update1Themes:state,themeAudioMigration1:true});}
    return {state,greeting:HomeThemeCore.normalizeGreeting(saved.update1Greeting)};
@@ -155,6 +168,21 @@
   if(action==='preferences-get')return (await chrome.storage.local.get('preferences')).preferences||{};
   if(action==='preferences-set'){await chrome.storage.local.set({preferences:HomeCore.preferences(message.value)});return {};}
   await initialize();
+  if(['cc98-query','cc98-cancel','cc98-release','cc98-data-status'].includes(action)){
+   if(!cc98Data)throw E.problem('CC98 数据模块未加载');
+   const owner=cc98Owner(sender,message.instance);
+   if(action==='cc98-release'){cc98Release(owner);return {};}
+   if(action==='cc98-data-status')return cc98Data.stats(owner);
+   if(typeof message.requestId!=='string'||!/^[-a-zA-Z0-9]{8,80}$/.test(message.requestId))throw E.problem('CC98 请求编号无效');
+   const key=owner+':'+message.requestId;
+   if(action==='cc98-cancel'){cc98Pending.get(key)?.controller.abort();return {};}
+   if(cc98Pending.has(key)||cc98Pending.size>=64)throw E.problem('CC98 正在处理其他请求，请稍后重试');
+   if(!cc98Owners.has(owner)&&cc98Owners.size>=8)cc98Release(cc98Owners.keys().next().value);
+   cc98Owners.delete(owner);cc98Owners.set(owner,sender.tab?.id??null);
+   const item={owner,controller:new AbortController()};cc98Pending.set(key,item);
+   try{return await cc98Data.query(owner,message.query,{force:message.force===true,signal:item.controller.signal});}
+   finally{if(cc98Pending.get(key)===item)cc98Pending.delete(key);}
+  }
   if(action==='open-data'){await chrome.tabs.create({url:chrome.runtime.getURL('data.html')});return {};}
   if(action.startsWith('portable-')){
    if(sender.url?.split('?')[0].split('#')[0]!==chrome.runtime.getURL('data.html'))throw E.problem('请从首页配置页面操作');
@@ -196,17 +224,17 @@
    }else await refresh(unique,message.force===true,date);
    return snapshot(date,message.projection);
   }
-  if(action==='clear-cache'){for(const scope of Object.keys(scopes))cancel(scope);await clear();return snapshot();}
+  if(action==='clear-cache'){cc98Clear();for(const scope of Object.keys(scopes))cancel(scope);await clear();return snapshot();}
   if(action==='logout'){cancel('campus');delete config.campus;campus.reset();await persistConfig();await clear(allCampusKeys());return snapshot();}
   if(action==='webvpn-connect'){if(!vpn)throw E.problem('WebVPN 模块未加载');return vpn.ensure(true);}
   if(action==='cc98-status'){if(!cc98)throw E.problem('CC98 模块未加载');return {...await cc98.status(),clientId:config.cc98?.clientId||'2dcb3ae1-c60b-4fb1-66d5-08df2824e910',vpn:vpn.status(),entry:store.entries.cc98||null};}
-  if(action==='cc98-start')return cc98.start();
-  if(action==='cc98-poll'){const result=await cc98.poll();if(result.status==='ready'){cc98Configured=true;await refresh(['cc98'],true);}return result;}
-  if(action==='cc98-forget'){cc98Configured=false;await cc98.forget();await clear(['cc98','cc98Top']);return {};}
-  if(action==='cc98-client'){const id=String(message.clientId||'').trim();if(!/^[a-zA-Z0-9._-]{1,120}$/.test(id))throw E.problem('CC98 应用 ID 无效');if(id!==config.cc98?.clientId){cc98Configured=false;await cc98.forget();await clear(['cc98','cc98Top']);}config.cc98={clientId:id};await persistConfig();return {};}
+  if(action==='cc98-start'){cc98Clear();return cc98.start();}
+  if(action==='cc98-poll'){const result=await cc98.poll();if(result.status==='ready'){cc98Clear();cc98Configured=true;await clear(['cc98','cc98Top']);await refresh(['cc98'],true);}return result;}
+  if(action==='cc98-forget'){cc98Clear();cc98Configured=false;await cc98.forget();await clear(['cc98','cc98Top']);return {};}
+  if(action==='cc98-client'){const id=String(message.clientId||'').trim();if(!/^[a-zA-Z0-9._-]{1,120}$/.test(id))throw E.problem('CC98 应用 ID 无效');if(id!==config.cc98?.clientId){cc98Clear();cc98Configured=false;await cc98.forget();await clear(['cc98','cc98Top']);}config.cc98={clientId:id};await persistConfig();return {};}
   if(action==='configuration')return {...status(),username:config.campus?.username||'',host:config.weather?.host||'',webvpnUsername:config.webvpn?.username||'',webvpnConfigured:!!config.webvpn?.password};
-  if(action==='save-webvpn'){const username=String(message.username||'').trim(),password=String(message.password||config.webvpn?.password||'');if(!username||username.length>100||!password||password.length>512)throw E.problem('请填写 WebVPN 用户名和密码');cancel('webvpn');vpn?.reset();config.webvpn={username,password};await persistConfig();return {}; }
-  if(action==='clear-webvpn'){cancel('webvpn');vpn?.reset();delete config.webvpn;await persistConfig();return {};}
+  if(action==='save-webvpn'){const username=String(message.username||'').trim(),password=String(message.password||config.webvpn?.password||'');if(!username||username.length>100||!password||password.length>512)throw E.problem('请填写 WebVPN 用户名和密码');cc98Clear();cancel('webvpn');vpn?.reset();config.webvpn={username,password};await persistConfig();return {}; }
+  if(action==='clear-webvpn'){cc98Clear();cancel('webvpn');vpn?.reset();delete config.webvpn;await persistConfig();return {};}
   if(action==='save-campus'){
    const username=String(message.username||'').trim(),password=String(message.password||config.campus?.password||'');
    if(!username||username.length>100||!password||password.length>512)throw E.problem('请填写学号和密码');
@@ -233,7 +261,7 @@
   if(message?.type!=='HOME_EXTERNAL')return;
   const mutating=['themes-get','themes-set','theme-draft','greeting-set','save-campus','save-webvpn','clear-webvpn','cc98-client','cc98-forget','save-weather','select-location','clear-weather','clear-cache','logout','preferences-set','portable-import','portable-restore','portable-export','portable-backup'].includes(message.action);
   const work=mutating?(typeof HomeMutation==='function'?HomeMutation(()=>handle(message,sender)):(mutations=mutations.catch(()=>{}).then(()=>handle(message,sender)))):handle(message,sender);
-  work.then(value=>reply({ok:true,value}),error=>reply({ok:false,error:error.publicMessage||'操作失败，请稍后重试'}));return true;
+  work.then(value=>reply({ok:true,value}),error=>reply({ok:false,error:error.publicMessage||'操作失败，请稍后重试',...(message.action?.startsWith('cc98-')?{code:error.name==='AbortError'?'CANCELLED':'REQUEST_FAILED'}:{})}));return true;
  });
 })();
 

@@ -1,4 +1,4 @@
-importScripts('policy.js', 'replacement.js', 'core.js', 'theme-core.js', 'bing-background.js', 'external-core.js', 'details-core.js', 'providers/vpn-crypto.js', 'providers/webvpn.js', 'providers/cc98.js', 'providers/campus.js', 'navigation-core.js', 'widget-core.js', 'portable-core.js', 'navigation-background.js', 'external-background.js', 'widget-background.js');
+importScripts('policy.js', 'replacement.js', 'core.js', 'theme-core.js', 'bing-background.js', 'external-core.js', 'details-core.js', 'providers/vpn-crypto.js', 'providers/webvpn.js', 'cc98-core.js', 'providers/cc98.js', 'providers/campus.js', 'navigation-core.js', 'widget-core.js', 'portable-core.js', 'navigation-background.js', 'external-background.js', 'widget-background.js');
 let queue = Promise.resolve();
 const nativeTabs = new Set();
 async function record(event, details = {}) {

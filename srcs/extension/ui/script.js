@@ -79,19 +79,27 @@ const engineButton = root.getElementById('engineButton');
 const engineMenu = root.getElementById('engineMenu');
 const engineIcons = {
   Bing: '<path fill="currentColor" stroke="none" d="M5 2v17l5 3 10-6v-5l-10-4 2 6 4 2-6 3V5Z"/>',
-  Google: '<path d="M20 8a8 8 0 1 0 1 7v-3h-9" stroke-width="3.5" fill="none" stroke="currentColor"/>',
+  Google: '',
   '浙大通': cardIcons.eagle,
-  '知乎': '<path d="M4 4h7M3 10h9M7 4v9l-4 7M7 13l5 6M15 5h6v13h-6V5Z"/>',
+  '知乎': '',
   '有道': '<path d="M4 3h16v18H4z" fill="currentColor" stroke="none"/><path d="M7 7h10M11 5l-4 7M10 10h6v8M10 10v9M10 13h6M10 16h6" stroke="var(--theme-panel,#281733)" stroke-width="1.5"/>',
-  'B站': '<rect x="3" y="6" width="18" height="14" rx="3"/><path d="m7 2 3 4m7-4-3 4M7 11v4M17 11v4M10 17h4"/>',
-  CSDN: '<path d="M5 9C3 5 7 2 12 3s8 3 7 6M5 10c-5-3-5 7 0 5m14-5c5-3 5 7 0 5M5 10c0-5 5-5 7-2 2-3 7-3 7 2v5c0 7-14 7-14 0Z"/><circle cx="8.5" cy="12" r=".8" fill="currentColor" stroke="none"/><circle cx="15.5" cy="12" r=".8" fill="currentColor" stroke="none"/><path d="M9 17q3 2 6 0"/>',
+  'B站': '',
+  CSDN: '',
   Github: '<path fill="currentColor" stroke="none" d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03A9.6 9.6 0 0 1 12 6.82c.85 0 1.7.11 2.5.34 1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/>',
   'GH镜': '',
   '学术词': '<path d="M3 3h15v18H3V3ZM6 7h8M6 11h6M6 15h7M20 6h2v13h-2"/>',
   '学术镜': '<path d="m2 7 10-5 10 5-10 5ZM6 10v6c3 3 7 3 10 1M18 20h5m-2-2 2 2-2 2"/>',
   '学术2': '<path d="m2 7 10-5 10 5-10 5ZM6 10v6c3 3 7 3 10 1M18 17c0-3 5-3 5 0 0 2-5 2-5 5h5"/>'
 };
+const engineReferences = {Google:'google', CSDN:'csdn', 'B站':'bilibili', '知乎':'zhihu'};
+let engineReferenceInstance = 0;
 function engineSvg(name) {
+  if (engineReferences[name]) {
+    const id = `search-reference-${++engineReferenceInstance}`;
+    // Alpha masks are extracted from the supplied PNGs without redrawing their
+    // contours. Tint their original pixels with the active theme's icon color.
+    return `<svg viewBox="0 0 24 24" aria-hidden="true"><defs><filter id="${id}" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feFlood flood-color="currentColor"/><feComposite operator="in" in2="SourceAlpha"/></filter></defs><image x="1" y="1" width="22" height="22" preserveAspectRatio="xMidYMid meet" href="${context.resource('assets/search-reference-'+engineReferences[name]+'.png')}" filter="url(#${id})"/></svg>`;
+  }
   if (name === '浙大通') return eagleSvg();
   if (name === 'GH镜') return `<svg viewBox="0 0 24 24" aria-hidden="true"><g transform="translate(0 0) scale(.82)">${engineIcons.Github}</g><rect x="13" y="14" width="11" height="10" rx="3" fill="var(--theme-panel,#281733)" stroke="none"/><path d="M15 19h7m-3-3 3 3-3 3" stroke="currentColor" fill="none" stroke-width="1.8"/></svg>`;
   return `<svg viewBox="0 0 24 24" aria-hidden="true">${engineIcons[name]}</svg>`;
@@ -102,53 +110,84 @@ function populateEngineSetting() {
   const select = root.querySelector('.setting-select');
   if (select) {select.innerHTML = Object.keys(engineIcons).map(name => `<option>${name}</option>`).join(''); select.value = prefs.engine;}
 }
-engineButton.addEventListener('click', () => { engineMenu.hidden = !engineMenu.hidden; engineButton.setAttribute('aria-expanded',String(!engineMenu.hidden)); });
+
 const searchInput = root.getElementById('searchInput');
 const searchClear = root.getElementById('searchClear');
-function closeEngineMenu() { engineMenu.hidden = true; engineButton.setAttribute('aria-expanded','false'); }
-engineMenu.addEventListener('click', event => {
-  const choice = event.target.closest('[data-engine]'); if (!choice) return;
-  selectEngine(choice.dataset.engine); savePreferences();
-  closeEngineMenu(); searchInput.focus();
-});
+const engineDropdown=HomeControls.bindMenu(root,{button:engineButton,menu:engineMenu,onSelect:choice=>{selectEngine(choice.dataset.engine);savePreferences();searchInput.focus();}});
+function closeEngineMenu(){engineDropdown.close();}
 searchInput.addEventListener('input', () => { searchClear.hidden = !searchInput.value; });
 searchInput.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.isComposing) {event.preventDefault(); submitSearch();} });
 searchClear.addEventListener('click', () => { searchInput.value = ''; searchClear.hidden = true; searchInput.focus(); });
 root.getElementById('searchSubmit').addEventListener('click', submitSearch);
-engineButton.addEventListener('keydown', event => {
-  if (event.key === 'ArrowDown') { event.preventDefault(); engineMenu.hidden = false; engineButton.setAttribute('aria-expanded','true'); engineMenu.querySelector('.selected').focus(); }
-});
-engineMenu.addEventListener('keydown', event => {
-  const buttons = [...engineMenu.querySelectorAll('button')];
-  const index = buttons.indexOf(root.activeElement);
-  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); buttons[(index + (event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length].focus(); }
-  if (event.key === 'Escape') { event.stopPropagation(); closeEngineMenu(); engineButton.focus(); }
-});
-root.addEventListener('click', event => { if (!event.target.closest('.engine-menu, .engine-button')) closeEngineMenu(); });
 root.getElementById('settingsPanel').addEventListener('click', event => { if (event.target.matches('.setting-button, .pill-group button')) event.target.blur(); });
 root.querySelectorAll('.settings-tab').forEach(button => button.addEventListener('click', () => { root.querySelectorAll('.settings-tab').forEach(tab => tab.classList.remove('active')); button.classList.add('active'); const data = settings[button.dataset.tab]; root.getElementById('settingsKicker').textContent = data.kicker; root.getElementById('settingsTitle').textContent = data.title; root.getElementById('settingsBody').innerHTML = data.body; root.querySelector('.settings-content').scrollTop = 0; }));
 root.getElementById('settingsBody').innerHTML = settings.campus.body;
 root.querySelectorAll('.settings-tab').forEach(button => button.addEventListener('click', populateEngineSetting));
 
+function renderClock(values,showSeconds) {
+  const clock=root.getElementById('clock'),fields=showSeconds?['hour','minute','second']:['hour','minute'];
+  const mode=showSeconds?'seconds':'minutes';
+  if(clock.dataset.mode!==mode){
+    clock.replaceChildren();
+    fields.forEach((field,index)=>{
+      if(index){const separator=document.createElement('span');separator.className='time-separator';separator.textContent=':';clock.append(separator);}
+      const pair=document.createElement('span');pair.className='clock-field';
+      clock.append(pair);
+    });
+    clock.dataset.mode=mode;
+    if(typeof window!=='undefined'&&typeof requestAnimationFrame==='function'){
+      if(!clock.updateReservedWidth){
+        let frame=0,key='';
+        const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
+        const measure=()=>{
+          frame=0;if(!ctx||!clock.isConnected)return;
+          const s=getComputedStyle(clock),font=`${s.fontStyle} ${s.fontWeight} ${s.fontSize} ${s.fontFamily}`;
+          const next=[font,s.columnGap,clock.dataset.mode].join('|');if(key===next)return;key=next;
+          ctx.font=font;
+          const widest=count=>{let width=0;for(let i=0;i<count;i++)width=Math.max(width,ctx.measureText(String(i).padStart(2,'0')).width);return width;};
+          const seconds=clock.dataset.mode==='seconds',pairs=seconds?3:2,gap=parseFloat(s.columnGap)||0;
+          const width=widest(24)+(pairs-1)*widest(60)+(pairs-1)*ctx.measureText(':').width+(pairs*2-2)*gap;
+          clock.style.width=Math.ceil(width)+'px';
+        };
+        const schedule=()=>{if(!frame)frame=requestAnimationFrame(measure);};
+        clock.updateReservedWidth=schedule;
+        const app=clock.closest('.app'),observer=app?new MutationObserver(schedule):null;
+        if(app)observer.observe(app,{attributes:true,attributeFilter:['style','class']});
+        window.addEventListener('resize',schedule);
+        const fontsChanged=()=>{key='';schedule();};
+        document.fonts?.ready.then(fontsChanged);document.fonts?.addEventListener('loadingdone',fontsChanged);
+        window.addEventListener('pagehide',()=>{cancelAnimationFrame(frame);observer?.disconnect();window.removeEventListener('resize',schedule);document.fonts?.removeEventListener('loadingdone',fontsChanged);},{once:true});
+      }
+      clock.updateReservedWidth();
+    }
+  }
+  fields.forEach((field,index)=>{
+    const value=String(values[field]).padStart(2,'0'),pair=clock.children[index*2];
+    if(pair.textContent!==value)pair.textContent=value;
+  });
+}
 function updateClock() {
   const now = new Date();
   const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,day:'numeric',month:'short'}).formatToParts(now);
   const values = Object.fromEntries(parts.map(part => [part.type,part.value]));
   const day = Number(values.day);
   const suffix = day % 100 >= 11 && day % 100 <= 13 ? 'th' : ({1:'st',2:'nd',3:'rd'}[day % 10] || 'th');
-  root.getElementById('clock').innerHTML = `${values.hour}<span class="time-separator">:</span>${values.minute}${prefs.showSeconds?`<span class="time-separator">:</span>${values.second}`:""}`;
-  root.getElementById('date').innerHTML = `${day}${suffix}<span class="date-separator">/</span>${values.month}`;
+  renderClock(values,prefs.showSeconds);
+  const date=root.getElementById('date'),dateKey=`${day}-${values.month}`;
+  if(date.dataset.clockDate!==dateKey){date.innerHTML=`${day}${suffix}<span class="date-separator">/</span>${values.month}`;date.dataset.clockDate=dateKey;}
 }
-root.querySelectorAll('.info-card').forEach(card => {
+// These four legacy headings belong to this initializer; CC98 owns its own header.
+root.querySelectorAll('.info-card.weather-card,.info-card.schedule-card,.info-card.exam-card,.info-card.assignments-card').forEach(card => {
   const key = ['weather','schedule','exam','assignments'].find(name => card.classList.contains(`${name}-card`));
   const heading = card.querySelector('.eyebrow');
+  if (!key || !heading) return;
   heading.insertAdjacentHTML('afterbegin', iconSvg(key));
   if (key !== 'weather') heading.dataset.sourceLink = key;
 });
 let clockTimer;
 function scheduleClock(){clearTimeout(clockTimer);updateClock();const step=prefs.showSeconds?1000:60000;clockTimer=setTimeout(scheduleClock,step-Date.now()%step+10);}
 scheduleClock();window.addEventListener('pagehide',()=>clearTimeout(clockTimer),{once:true});
-const hour = Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',hour:'2-digit',hour12:false}).format(new Date())); root.getElementById('greeting').textContent = `${hour < 11 ? '早上好' : hour < 18 ? '下午好' : '晚上好'}，Yangkao`;
+const hour = Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',hour:'2-digit',hour12:false}).format(new Date())); root.getElementById('greeting').textContent = `${hour < 11 ? '早上好' : hour < 18 ? '下午好' : '晚上好'}，Zjuer`;
 setTimeout(() => root.getElementById('greeting').classList.add('show'), 160);
 setTimeout(() => root.getElementById('greeting').classList.remove('show'), 2700);
 
@@ -156,7 +195,7 @@ setTimeout(() => root.getElementById('greeting').classList.remove('show'), 2700)
 function selectEngine(name) {
   prefs.engine = name;
   engineButton.innerHTML = engineSvg(name); engineButton.setAttribute('aria-label',`切换搜索引擎：${name}`);
-  engineMenu.querySelectorAll('button').forEach(button => {const selected=button.dataset.engine === name;button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));});
+  engineMenu.querySelectorAll('button').forEach(button => {const selected=button.dataset.engine === name;button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));button.setAttribute('aria-selected',String(selected));});
   const select=root.querySelector('.setting-select');if(select) select.value=name;
 }
 function submitSearch() {

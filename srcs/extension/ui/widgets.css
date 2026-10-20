@@ -11,6 +11,13 @@
 .widget-row.is-open{background:color-mix(in srgb,var(--theme-primary) 13%,transparent)}
 .widget-row .widget-button{order:2;flex:0 0 44px;width:44px;height:48px;min-height:0;justify-content:center;padding:8px;transform:none;background:transparent}
 .widget-row .widget-button:hover{transform:none;background:transparent}.widget-button[aria-pressed=true]{color:var(--theme-accent)}
+.widget-row .widget-button{position:relative;isolation:isolate}
+.widget-row .widget-button::before{content:"";position:absolute;inset:4px;border-radius:8px;background:color-mix(in srgb,var(--theme-text) 16%,transparent);opacity:0;z-index:-1;transition:opacity .16s ease}
+.widget-row .widget-button::after{content:"";position:absolute;right:0;top:1px;width:11px;height:11px;background:var(--theme-text);mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M8 2h8v2l-1 1v5l4 4v2h-6v6h-2v-6H5v-2l4-4V5L8 4Z'/%3E%3C/svg%3E") center/contain no-repeat;opacity:0;transform:translateY(2px);transition:opacity .16s ease,transform .16s ease;pointer-events:none}
+.widget-row .widget-button[aria-pressed=true]::before,.widget-row .widget-button[aria-pressed=true]::after{opacity:1}
+.widget-row .widget-button[aria-pressed=true]::after{transform:none}
+.widget-row .widget-button:focus-visible{outline:2px solid var(--theme-text);outline-offset:1px}
+@media(prefers-reduced-motion:reduce){.widget-row .widget-button::before,.widget-row .widget-button::after{transition:none}}
 .widget-detail{order:1;flex:1;min-width:0;border:0;background:transparent;color:var(--theme-text);font:inherit;text-align:left;cursor:pointer;padding:4px 7px 4px 10px;opacity:0;visibility:hidden;transform:translateX(8px);transition:opacity .18s,transform .18s,visibility 0s linear .18s}
 .widget-row.is-open .widget-detail{opacity:1;visibility:visible;transform:none;transition-delay:0s}.widget-detail:hover{color:var(--theme-accent)}
 .widget-row .widget-copy strong{font-size:12px}.widget-row .widget-copy small{font-size:11px;margin-top:2px}.widget-cache{right:0;bottom:0}
@@ -82,3 +89,7 @@
 .rail-control .rail-control-trigger:hover{background:transparent;color:var(--theme-accent)}
 .rail-control.is-active .rail-control-trigger{color:var(--theme-accent);background:color-mix(in srgb,var(--theme-primary) 27%,var(--theme-panel));border-color:color-mix(in srgb,var(--theme-accent) 75%,transparent);box-shadow:0 0 0 2px color-mix(in srgb,var(--theme-primary) 12%,transparent)}
 @media(prefers-reduced-motion:reduce){.rail-control,.rail-control-detail{transition:none}}
+
+.widget-exam-name{display:block;font-size:13px;line-height:1.5;margin-top:5px;color:var(--theme-text)}
+
+.widget-multi .widget-exam-name{padding:3px 7px 0 10px}

@@ -1,6 +1,7 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const operations=new Map();
+const refreshSymbol=HomeIcons.element('refresh');refreshSymbol.classList.add('refresh-icon');$('cc98Refresh').replaceChildren(refreshSymbol);$('cc98Refresh').title='刷新未读';$('cc98Refresh').setAttribute('aria-label','刷新未读');
 async function call(action,args={}) {
   const reply=await chrome.runtime.sendMessage({type:'HOME_EXTERNAL',action,...args,...(['snapshot','refresh'].includes(action)?{projection:'status'}:{})});
   if(!reply?.ok)throw new Error(reply?.error||'扩展后台未响应');

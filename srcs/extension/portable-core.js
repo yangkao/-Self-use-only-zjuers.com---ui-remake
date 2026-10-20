@@ -16,10 +16,14 @@
   if(prefs&&!Object.hasOwn(prefs,'rotateLogo'))prefs.rotateLogo=false;
   for(const theme of value.settings?.themes?.themes||[])if(theme.visuals)for(const [key,v]of Object.entries({widgetOpacity:50,menuDuration:180,detailDuration:200,focusGlow:20}))if(!Object.hasOwn(theme.visuals,key))theme.visuals[key]=v;
   for(const theme of value.settings?.themes?.themes||[])if(!Object.hasOwn(theme,'muted'))theme.muted=true;
+  for(const theme of value.settings?.themes?.themes||[]){if(!Object.hasOwn(theme,'paletteSettings'))theme.paletteSettings=T.normalizePaletteSettings();if(!Object.hasOwn(theme,'lockedColors'))theme.lockedColors={};}
+  for(const theme of value.settings?.themes?.themes||[]){if(!Object.hasOwn(theme,'material'))theme.material='current';if(!['current','blend','liquid'].includes(theme.material))fail('主题材质无效');}
   const s=value.settings;keys(s,['preferences','themes','greeting','navigation','weather','widgets']);
   if(s.themes?.themes?.some(t=>t?.wallpaper?.type==='builtin')){
    keys(s.themes,['activeId','themes']);const ids=new Set();
-   for(const theme of s.themes.themes){keys(theme,['id','name','muted','wallpaper','colors','visuals']);if(typeof theme.id!=='string'||ids.has(theme.id))fail('旧主题编号无效');ids.add(theme.id);
+   for(const theme of s.themes.themes){keys(theme,['id','name','material','muted','wallpaper','colors','visuals','paletteSettings','lockedColors',...(Object.hasOwn(theme,'generatedColors')?['generatedColors']:[])]);if(typeof theme.id!=='string'||ids.has(theme.id))fail('旧主题编号无效');ids.add(theme.id);
+    if(canonical(theme.paletteSettings)!==canonical(T.normalizePaletteSettings(theme.paletteSettings))||canonical(theme.lockedColors)!==canonical(T.normalizeTheme({...theme,id:'validate-locks'}).lockedColors))fail('????????');
+    if(Object.hasOwn(theme,'generatedColors')&&canonical(theme.generatedColors)!==canonical(T.normalizeTheme({...theme,id:'validate-generated'}).generatedColors))fail('??????');
     if(theme.wallpaper.type==='builtin'){
      if(Object.keys(theme.wallpaper).some(k=>!['type','path','crop'].includes(k))||theme.wallpaper.path!=='')fail('旧壁纸引用无效');
      keys(theme.colors,Object.keys(T.defaultTheme().colors));if(Object.values(theme.colors).some(v=>typeof v!=='string'||!/^#[0-9a-f]{6}$/i.test(v)))fail('旧主题配色无效');

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ZJUers 个人首页",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "在 ZJUers 轻首页完整原站上应用个人界面，并将 Edge 新标签导向原站。",
   "permissions": [
     "storage",
@@ -48,10 +48,15 @@
         "startup.js",
         "theme-export.js",
         "ui/wallpaper.js",
+        "ui/glass-surface.js",
         "ui/customization.js",
         "ui/controls.js",
         "ui/icons.js",
         "ui/script.js",
+        "ui/cc98-ui-core.js",
+        "ui/cc98-forum.js",
+        "ui/cc98-personal.js",
+        "ui/cc98.js",
         "ui/external.js",
         "ui/navigation.js",
         "ui/settings.js",
@@ -86,7 +91,13 @@
         "wallpaper-editor.js",
         "wallpaper-editor.css",
         "bing-client.js",
-        "media-playback.js"
+        "media-playback.js",
+        "palette-sampling.js",
+        "palette-editor.js",
+        "glass-media.js",
+        "vendor/goose-glass.js",
+        "vendor/Goose-LICENSE",
+        "vendor/Goose-NOTICE.md"
       ],
       "matches": [
         "https://zjuers.com/*"

@@ -29,7 +29,7 @@ test('Edge export contains colors only and greeting substitutes plain bounded te
  assert.equal(manifest.manifest_version,3);assert.ok(manifest.theme.colors.frame);assert.ok(!JSON.stringify(manifest).includes('secret'));
  assert.equal(core.greeting({name:'小王',morning:'早安，{称呼}'},8),'早安，小王');
  assert.equal(core.normalizeGreeting({name:'x'.repeat(100)}).name.length,40);
- assert.ok(core.greeting(null,20).includes('Yangkao'));
+ assert.ok(core.greeting(null,20).includes('Zjuer'));
 });
 test('Edge theme explicitly colors every supported browser surface with readable text',()=>{
  const palette={background:'#120e20',panel:'#211a30',secondaryCard:'#291f39',card:'#38284c',search:'#1d172c',accent:'#ddafd8',text:'#f4eaf5',muted:'#cabbd3',primary:'#cfafe0'};
@@ -80,7 +80,7 @@ test('greeting preserves original eleven oclock and midnight boundaries',()=>{
 });
 test('default theme copies retain baseline sizes and dark card surfaces',()=>{
  const theme=core.defaultTheme(),v=theme.visuals;
- for(const [key,value] of Object.entries({clockSize:24,searchHeight:40,titleSize:21,cardGap:16,groupGap:31,radius:9,cardOpacity:50,searchOpacity:0,uiFont:'ZJUers Josefin'}))assert.equal(v[key],value,key);
+ for(const [key,value] of Object.entries({clockSize:24,searchHeight:40,titleSize:21,cardGap:16,groupGap:31,radius:9,cardOpacity:50,searchOpacity:30,uiFont:'ZJUers Josefin'}))assert.equal(v[key],value,key);
  assert.equal(theme.colors.card,'#292929');assert.equal(theme.colors.search,'#1f1f1f');
  const palette=core.paletteFromPixels([[255,0,0,255]]);
  assert.ok(luminance(palette.card)<.05);assert.ok(luminance(palette.search)<.05);
