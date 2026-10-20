@@ -187,7 +187,7 @@ root.querySelectorAll('.info-card.weather-card,.info-card.schedule-card,.info-ca
 let clockTimer;
 function scheduleClock(){clearTimeout(clockTimer);updateClock();const step=prefs.showSeconds?1000:60000;clockTimer=setTimeout(scheduleClock,step-Date.now()%step+10);}
 scheduleClock();window.addEventListener('pagehide',()=>clearTimeout(clockTimer),{once:true});
-const hour = Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',hour:'2-digit',hour12:false}).format(new Date())); root.getElementById('greeting').textContent = `${hour < 11 ? '早上好' : hour < 18 ? '下午好' : '晚上好'}，Yangkao`;
+const hour = Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',hour:'2-digit',hour12:false}).format(new Date())); root.getElementById('greeting').textContent = `${hour < 11 ? '早上好' : hour < 18 ? '下午好' : '晚上好'}，Zjuer`;
 setTimeout(() => root.getElementById('greeting').classList.add('show'), 160);
 setTimeout(() => root.getElementById('greeting').classList.remove('show'), 2700);
 

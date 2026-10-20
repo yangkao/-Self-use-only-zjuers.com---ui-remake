@@ -157,7 +157,7 @@
     const refs=element('span',undefined,'setting-status');refs.dataset.weatherReferences='';settingRow(s,'来源归属说明',refs);
    }else{
     const s=settingsSection('数据管理');settingRow(s,'导出、导入及恢复首页配置',button('管理配置','open-data'));settingRow(s,'清除天气、校内信息与名句缓存，保留凭据',button('清除缓存','clear-cache'));settingRow(s,'清除校内凭据与校内缓存',button('退出并清除','logout'));const reset=button('重置','');reset.dataset.action='reset';settingRow(s,'重置界面偏好',reset);
-    const about=settingsSection('关于此首页');settingRow(about,'版本',element('span','正式版 · 0.4.0'));settingRow(about,'页面基础',link('ZJUers 轻首页','https://zjuers.com/'));settingRow(about,'天气',link('和风天气','https://www.qweather.com/'));settingRow(about,'哲学名句',link('一言','https://hitokoto.cn/'));settingRow(about,'校内接入参考',link('Celechron','https://github.com/Celechron/Celechron'));settingRow(about,'权限与来源说明',link('查看',chrome.runtime.getURL('sources.html')));const sourceLink=about.lastElementChild.querySelector('a');sourceLink.href=chrome.runtime.getURL('sources.html');
+    const about=settingsSection('关于此首页');settingRow(about,'版本',element('span','正式版 · '+chrome.runtime.getManifest().version));settingRow(about,'页面基础',link('ZJUers 轻首页','https://zjuers.com/'));settingRow(about,'天气',link('和风天气','https://www.qweather.com/'));settingRow(about,'哲学名句',link('一言','https://hitokoto.cn/'));settingRow(about,'校内接入参考',link('Celechron','https://github.com/Celechron/Celechron'));settingRow(about,'权限与来源说明',link('查看',chrome.runtime.getURL('sources.html')));const sourceLink=about.lastElementChild.querySelector('a');sourceLink.href=chrome.runtime.getURL('sources.html');
    }
    const out=element('output',undefined,'settings-message');out.setAttribute('aria-live','polite');settings.append(out);renderSettingsStatus();
   }

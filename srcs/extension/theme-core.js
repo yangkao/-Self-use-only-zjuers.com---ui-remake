@@ -149,7 +149,7 @@
   };
   return {manifest_version:3,name:'ZJUers 个人配色',version:'1.1.0',theme:{colors:Object.fromEntries(Object.entries(mapped).map(([key,color])=>[key,rgb(color)]))}};
  }
- function normalizeGreeting(value){const c=obj(value);return {name:bounded(c.name,40,'Yangkao'),morning:bounded(c.morning,200,'早上好，{称呼}'),afternoon:bounded(c.afternoon,200,'下午好，{称呼}'),evening:bounded(c.evening,200,'晚上好，{称呼}')};}
+ function normalizeGreeting(value){const c=obj(value);return {name:bounded(c.name,40,'Zjuer'),morning:bounded(c.morning,200,'早上好，{称呼}'),afternoon:bounded(c.afternoon,200,'下午好，{称呼}'),evening:bounded(c.evening,200,'晚上好，{称呼}')};}
  function greeting(value,hour){const c=normalizeGreeting(value),h=Number.isFinite(hour)?hour:12;return c[h<11?'morning':h<18?'afternoon':'evening'].replace(/\{称呼\}/g,()=>c.name);}
  function manageTheme(value,action,id,name){
   const state=normalizeState(value),theme=state.themes.find(item=>item.id===id);

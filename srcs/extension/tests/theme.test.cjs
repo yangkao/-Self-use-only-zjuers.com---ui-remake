@@ -29,7 +29,7 @@ test('Edge export contains colors only and greeting substitutes plain bounded te
  assert.equal(manifest.manifest_version,3);assert.ok(manifest.theme.colors.frame);assert.ok(!JSON.stringify(manifest).includes('secret'));
  assert.equal(core.greeting({name:'小王',morning:'早安，{称呼}'},8),'早安，小王');
  assert.equal(core.normalizeGreeting({name:'x'.repeat(100)}).name.length,40);
- assert.ok(core.greeting(null,20).includes('Yangkao'));
+ assert.ok(core.greeting(null,20).includes('Zjuer'));
 });
 test('Edge theme explicitly colors every supported browser surface with readable text',()=>{
  const palette={background:'#120e20',panel:'#211a30',secondaryCard:'#291f39',card:'#38284c',search:'#1d172c',accent:'#ddafd8',text:'#f4eaf5',muted:'#cabbd3',primary:'#cfafe0'};
