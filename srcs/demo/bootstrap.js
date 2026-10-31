@@ -3,7 +3,7 @@
  try{
   await HomeDemo.prepareWallpaper();
   const resource=HomeDemo.resource,host=document.createElement('div');host.id='zjuers-personal-host';const root=host.attachShadow({mode:'open'});host.style.visibility='hidden';document.body.prepend(host);
-  const sheets=['style','controls','customization','details','widgets','navigation',...(globalThis.HomeSurface?['surfaces']:[]),...(globalThis.HomeCC98?['cc98']:[])];
+  const sheets=['style','controls','customization','details','widgets','navigation',...(globalThis.HomeSurface?['surfaces']:[]),...(globalThis.HomeCC98?['cc98']:[]),'emphasis'];
   const styles=Promise.all(sheets.map(name=>new Promise((resolve,reject)=>{const e=document.createElement('link');e.rel='stylesheet';e.href=resource('ui/'+name+'.css');e.onload=resolve;e.onerror=reject;root.append(e);})));const overlay=document.createElement('style');overlay.textContent='.demo-wallpaper{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.app{min-height:100vh}';root.append(overlay);
   const [html,categories,initial]=await Promise.all([fetch(resource('ui/template.html')).then(r=>r.text()),fetch('navigation.json').then(r=>r.json()),HomeExternal.call('themes-get'),styles]);
   const template=document.createElement('template');template.innerHTML=html;root.append(template.content.cloneNode(true));root.querySelectorAll('img').forEach(i=>i.src=resource('ui/media/zjuers.png'));

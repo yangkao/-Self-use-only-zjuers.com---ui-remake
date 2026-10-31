@@ -66,7 +66,10 @@ let server,edge,cdp;const result={demo:path.relative(root,demoDir),requests:[]};
   await click('.cc98-personal-pane','签到');await wait(`${q}.querySelector('.cc98-personal')?.textContent.includes('今日已签到')`);result.forum.signin=true;await screenshot('cc98-signin');await run("r.__cc98.closeDetail()");await delay(250);
  }
  await run("r.getElementById('settingsTrigger').click();r.querySelector('[data-category=theme]').click()");await delay(500);await screenshot('settings');
- result.frames=await run("return [...r.querySelectorAll('iframe')].map(f=>({src:f.getAttribute('src'),loaded:!!f.contentDocument?.body,frame:f.contentDocument?.body.dataset.frame}));");
+ result.version=await run("return {expected:chrome.runtime.getManifest().version,footer:r.querySelector('.settings-nav-foot').textContent};");if(!result.version.footer.includes(result.version.expected))throw Error('Settings footer version mismatch');
+ await run("r.querySelector('[data-category=about]').click()");result.version.about=await run("return r.getElementById('settingsBody').textContent;");if(!result.version.about.includes(result.version.expected))throw Error('About version mismatch');await run("r.querySelector('[data-category=theme]').click()");
+ await wait(`${q}.querySelector('.wallpaper-editor-frame')?.contentDocument?.body?.dataset.frame==='editor'`);
+ result.frames=await run("return [...r.querySelectorAll('iframe')].map(f=>({src:f.getAttribute('src'),loaded:!!f.contentDocument?.body,frame:f.contentDocument?.body?.dataset.frame}));");
  await run("const f=r.querySelector('.wallpaper-editor-frame').contentWindow;const blob=await(await fetch('wallpaper.svg')).blob();const file=new File([blob],'example.svg',{type:'image/svg+xml'}),dt=new DataTransfer();dt.items.add(file);f.document.getElementById('file').files=dt.files;f.document.getElementById('file').dispatchEvent(new Event('change')); ");await delay(500);
  await run("r.querySelector('.wallpaper-editor-frame').contentDocument.getElementById('palette').click()");await delay(300);
  await run("r.querySelector('[data-custom-action=save]').click()");await delay(500);

@@ -4,7 +4,8 @@
  if(parent===window||!parent.HomeDemo){document.body.textContent='请从在线演示的设置中打开此页面。';return;}
  const D=parent.HomeDemo,origin=location.origin,kind=document.body.dataset.frame;
  const $=id=>document.getElementById(id),post=data=>parent.postMessage(data,origin);
- const sendHeight=()=>post({type:kind==='editor'?'EDITOR_HEIGHT':'SETTINGS_HEIGHT',height:Math.ceil(document.body.getBoundingClientRect().height)+20});
+ if(kind!=='thumbnail')document.documentElement.classList.add('demo-embedded');
+ const sendHeight=()=>{const style=getComputedStyle(document.documentElement);post({type:kind==='editor'?'EDITOR_HEIGHT':'SETTINGS_HEIGHT',height:Math.ceil(document.body.getBoundingClientRect().height+parseFloat(style.paddingTop)+parseFloat(style.paddingBottom))});};
  function colors(c){for(const [key,value]of Object.entries(c||{}))if(/^#[0-9a-f]{6}$/i.test(value))document.documentElement.style.setProperty('--theme-'+key,value);document.documentElement.dataset.themeReady='true';}
  colors(D.theme().themes.find(t=>t.id===D.theme().activeId).colors);
  new ResizeObserver(sendHeight).observe(document.body);document.addEventListener('keydown',e=>{if(e.key==='Escape')post({type:'SETTINGS_ESCAPE'});});

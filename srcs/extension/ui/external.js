@@ -22,6 +22,7 @@
   return [...items].filter(i=>!i.date||(i.date>=today&&(!i.end||!Number.isFinite(Date.parse(i.end))||Date.parse(i.end)>now)&&(all||i.date<limit))).sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999')||(Date.parse(a.start)||0)-(Date.parse(b.start)||0));
  }
  function calendarDays(month){const [y,m]=month.split('-').map(Number),first=new Date(Date.UTC(y,m-1,1)),offset=(first.getUTCDay()+6)%7;return Array.from({length:42},(_,i)=>new Date(Date.UTC(y,m-1,1-offset+i)).toISOString().slice(0,10));}
+ function isCalendarEvent(event,panel,toggle){const path=event.composedPath?.()||[];return path.includes(panel)||path.includes(toggle)||!!(event.target&&(panel?.contains(event.target)||toggle?.contains(event.target)));}
  function quoteAttribution(q){return [q.author,q.from?(/^《.*》$/.test(q.from)?q.from:`《${q.from}》`):null].filter(Boolean).join(' · ');}
  function compactRain(value){return String(value||'短时降水等待更新').replace(/未来两小时/g,'未来2小时').replace(/间歇性降雨还将持续(\d+)分钟/g,'间歇降雨约$1分钟').replace(/降雨还将持续(\d+)分钟/g,'降雨持续约$1分钟').replace(/(\d+)分钟后开始下雨/g,'约$1分钟后降雨');}
  function watchVideo(video,doc,report){
@@ -64,10 +65,11 @@
   let stateVersion='',paintVersion='',snapshotFlight=null,startFlight=null;const cardVersions={};
   const projection=()=>app.classList.contains('is-secondary')?'secondary':'summary';
   function accept(result){if(result.projection&&result.projection!==projection()){void snapshot().catch(()=>{});return;}state=result;render();}
-  function chooseDay(value){day=value;followToday=value===dateOf();if(calendarPanel){calendarPanel.hidden=true;calendarButton.setAttribute('aria-expanded','false');}void snapshot().then(()=>refresh(['courses'])).catch(()=>{});}
+  function closeCalendar(){if(!calendarPanel)return;calendarPanel.hidden=true;calendarButton.setAttribute('aria-expanded','false');cards.courses.classList.remove('calendar-open');}
+  function chooseDay(value){day=value;followToday=value===dateOf();closeCalendar();void snapshot().then(()=>refresh(['courses'])).catch(()=>{});}
   function drawCalendar(){
    calendarPanel.replaceChildren();const bar=element('div',undefined,'calendar-bar');
-   for(const [label,offset]of [['‹',-1],[calendarMonth,0],['›',1]]){const b=element('button',label,'small-action');b.type='button';if(offset){b.setAttribute('aria-label',offset<0?'上个月':'下个月');b.onclick=()=>{const [y,m]=calendarMonth.split('-').map(Number);calendarMonth=new Date(Date.UTC(y,m-1+offset,1)).toISOString().slice(0,7);drawCalendar();};}else b.disabled=true;bar.append(b);}calendarPanel.append(bar);
+   for(const [label,offset]of [['‹',-1],[calendarMonth,0],['›',1]]){const b=element('button',label,'small-action');b.type='button';if(offset){const name=offset<0?'上个月':'下个月';b.setAttribute('aria-label',name);b.onclick=()=>{const focused=view.activeElement===b,[y,m]=calendarMonth.split('-').map(Number);calendarMonth=new Date(Date.UTC(y,m-1+offset,1)).toISOString().slice(0,7);drawCalendar();if(focused)calendarPanel.querySelector('[aria-label="'+name+'"]').focus({preventScroll:true});};}else b.disabled=true;bar.append(b);}calendarPanel.append(bar);
    const grid=element('div',undefined,'calendar-grid');for(const weekday of ['一','二','三','四','五','六','日'])grid.append(element('span',weekday,'calendar-weekday'));
    const dates=new Set(state.entries.courses?.data?.dates||(state.entries.courses?.data?.items||[]).map(i=>i.date||i.start&&dateOf(i.start)).filter(Boolean));
    for(const value of calendarDays(calendarMonth)){const b=element('button',String(Number(value.slice(-2))),'calendar-day');b.type='button';b.setAttribute('aria-label',value);b.classList.toggle('outside-month',!value.startsWith(calendarMonth));b.classList.toggle('selected',value===day);b.classList.toggle('today',value===dateOf());b.classList.toggle('has-course',dates.has(value));b.onclick=()=>chooseDay(value);grid.append(b);}calendarPanel.append(grid);const today=element('button','回到今天','small-action');today.onclick=()=>chooseDay(dateOf());calendarPanel.append(today);
@@ -82,7 +84,7 @@
     for(const [text,offset]of [['‹',-1],['今天',0],['›',1]]){const b=element('button',text,'small-action');b.type='button';b.setAttribute('aria-label',offset<0?'前一天':offset>0?'后一天':'今天');b.onclick=()=>{followToday=offset===0;day=offset?new Date(Date.parse(day+'T12:00:00+08:00')+offset*86400000).toISOString().slice(0,10):dateOf();void snapshot().then(()=>refresh(['courses'])).catch(()=>{});};controls.append(b);}
     calendarButton=element('button',undefined,'small-action calendar-toggle');calendarButton.type='button';calendarButton.append(icon('calendar'));calendarButton.setAttribute('aria-label','选择课表日期');calendarButton.setAttribute('aria-expanded','false');
     calendarPanel=element('div',undefined,'calendar-panel preview-control');calendarPanel.hidden=true;calendarPanel.setAttribute('role','group');calendarPanel.setAttribute('aria-label','课表日期选择');controls.append(calendarButton,calendarPanel);
-    calendarButton.onclick=()=>{calendarPanel.hidden=!calendarPanel.hidden;calendarButton.setAttribute('aria-expanded',String(!calendarPanel.hidden));if(!calendarPanel.hidden){calendarMonth=day.slice(0,7);drawCalendar();}};
+    calendarButton.onclick=()=>{if(!calendarPanel.hidden){closeCalendar();return;}calendarPanel.hidden=false;calendarButton.setAttribute('aria-expanded','true');cards.courses.classList.add('calendar-open');calendarMonth=day.slice(0,7);drawCalendar();};
    }
    if(key==='exams'){const b=element('button','全部未来考试','small-action');b.type='button';b.onclick=()=>{allExams=!allExams;b.textContent=allExams?'未来 14 天':'全部未来考试';render();};controls.append(b);}
   }
@@ -157,7 +159,7 @@
     const refs=element('span',undefined,'setting-status');refs.dataset.weatherReferences='';settingRow(s,'来源归属说明',refs);
    }else{
     const s=settingsSection('数据管理');settingRow(s,'导出、导入及恢复首页配置',button('管理配置','open-data'));settingRow(s,'清除天气、校内信息与名句缓存，保留凭据',button('清除缓存','clear-cache'));settingRow(s,'清除校内凭据与校内缓存',button('退出并清除','logout'));const reset=button('重置','');reset.dataset.action='reset';settingRow(s,'重置界面偏好',reset);
-    const about=settingsSection('关于此首页');settingRow(about,'版本',element('span','正式版 · '+chrome.runtime.getManifest().version));settingRow(about,'页面基础',link('ZJUers 轻首页','https://zjuers.com/'));settingRow(about,'天气',link('和风天气','https://www.qweather.com/'));settingRow(about,'哲学名句',link('一言','https://hitokoto.cn/'));settingRow(about,'校内接入参考',link('Celechron','https://github.com/Celechron/Celechron'));settingRow(about,'权限与来源说明',link('查看',chrome.runtime.getURL('sources.html')));const sourceLink=about.lastElementChild.querySelector('a');sourceLink.href=chrome.runtime.getURL('sources.html');
+    const about=settingsSection('关于此首页');settingRow(about,'版本',element('span','正式版 · 0.4.0'));settingRow(about,'页面基础',link('ZJUers 轻首页','https://zjuers.com/'));settingRow(about,'天气',link('和风天气','https://www.qweather.com/'));settingRow(about,'哲学名句',link('一言','https://hitokoto.cn/'));settingRow(about,'校内接入参考',link('Celechron','https://github.com/Celechron/Celechron'));settingRow(about,'权限与来源说明',link('查看',chrome.runtime.getURL('sources.html')));const sourceLink=about.lastElementChild.querySelector('a');sourceLink.href=chrome.runtime.getURL('sources.html');
    }
    const out=element('output',undefined,'settings-message');out.setAttribute('aria-live','polite');settings.append(out);renderSettingsStatus();
   }
@@ -194,8 +196,8 @@
   settings.addEventListener('click',async event=>{const b=event.target.closest('[data-external-action]');if(event.target.dataset.action==='reset'){queueMicrotask(renderSettings);return;}if(!b?.dataset.externalAction)return;b.disabled=true;const output=settings.querySelector('.settings-message');try{if(b.dataset.externalAction==='refresh'){if(output)output.textContent='正在刷新…';await refresh(b.dataset.keys.split(','),true);if(output)output.textContent='刷新完成，结果见各来源状态。';}else {const result=await call(b.dataset.externalAction);if(result?.entries){state=result;if(b.dataset.externalAction==='clear-cache')quoteFinal=null;render();}if(output)output.textContent=b.dataset.externalAction==='open-account'?'已打开扩展配置页。':'操作完成。';}}catch(error){if(output)output.textContent=error.message;}finally{b.disabled=false;}});
   view.querySelectorAll('.settings-tab').forEach(b=>b.addEventListener('click',renderSettings));
   view.addEventListener('home-secondary-open',()=>{render();void snapshot().then(start).catch(()=>{});});
-  view.addEventListener('click',event=>{if(calendarPanel&&!event.target.closest('.calendar-panel,.calendar-toggle')){calendarPanel.hidden=true;calendarButton.setAttribute('aria-expanded','false');}});
-  view.addEventListener('keydown',event=>{if(event.key==='Escape'&&calendarPanel&&!calendarPanel.hidden){calendarPanel.hidden=true;calendarButton.setAttribute('aria-expanded','false');calendarButton.focus();event.stopImmediatePropagation();}},true);
+  view.addEventListener('click',event=>{if(calendarPanel&&!isCalendarEvent(event,calendarPanel,calendarButton))closeCalendar();});
+  view.addEventListener('keydown',event=>{if(event.key==='Escape'&&calendarPanel&&!calendarPanel.hidden){closeCalendar();calendarButton.focus();event.stopImmediatePropagation();}},true);
   let resumeTimer;
   function resume(){clearTimeout(resumeTimer);resumeTimer=setTimeout(()=>{if(!document.hidden&&!disposed){render();void snapshot().then(start).catch(()=>{});}},80);}
   document.addEventListener('visibilitychange',()=>{clearTimeout(timer);clearTimeout(resumeTimer);if(!document.hidden){resume();timer=setTimeout(tick,60000);}});
@@ -217,5 +219,5 @@
   setTimeout(()=>{if('requestIdleCallback'in window)requestIdleCallback(()=>{void start();},{timeout:1000});else void start();},1500);
   timer=setTimeout(tick,1500);
  }
- root.HomeExternal={call,initialize,selectCourses,selectExams,calendarDays,quoteAttribution,compactRain,weatherIcon,watchVideo,dateOf,safeLink};if(typeof module!=='undefined')module.exports=root.HomeExternal;
+ root.HomeExternal={call,initialize,selectCourses,selectExams,calendarDays,isCalendarEvent,quoteAttribution,compactRain,weatherIcon,watchVideo,dateOf,safeLink};if(typeof module!=='undefined')module.exports=root.HomeExternal;
 })(globalThis);

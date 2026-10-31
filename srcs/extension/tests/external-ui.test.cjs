@@ -28,6 +28,13 @@ test('future exams exclude ended and past dates but retain unpublished dates',()
 test('calendar grid handles leap days and Monday first without timezone drift',()=>{
  const cells=UI.calendarDays('2024-02');assert.equal(cells.length,42);assert.equal(cells[0],'2024-01-29');assert.ok(cells.includes('2024-02-29'));
 });
+test('calendar internal clicks retain their original path after month controls are replaced',()=>{
+ const removedButton={closest:()=>null},panel={contains:()=>false},toggle={contains:()=>false};
+ const event={target:removedButton,composedPath:()=>[removedButton,{},panel,{}]};
+ assert.equal(typeof UI.isCalendarEvent,'function');assert.equal(UI.isCalendarEvent(event,panel,toggle),true);
+ assert.equal(UI.isCalendarEvent({target:{},composedPath:()=>[{},{}]},panel,toggle),false);
+ const glyph={};assert.equal(UI.isCalendarEvent({target:glyph},panel,{contains:n=>n===glyph}),true);
+});
 test('quote attribution wraps source only once',()=>{
  assert.equal(UI.quoteAttribution({author:'作者',from:'作品'}),'作者 · 《作品》');
  assert.equal(UI.quoteAttribution({from:'《作品》'}),'《作品》');

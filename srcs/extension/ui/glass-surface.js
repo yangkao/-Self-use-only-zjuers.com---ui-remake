@@ -1,7 +1,7 @@
 /* Project surfaces: shared DOM; materials change presentation only. */
 (function(global){
  'use strict';
- const selectors={base:'.search-shell,.nav-card,.info-card,.widget-row.is-open,.rail-control:is(:hover,:has(:focus-visible),.is-active)',overlay:'.detail-shell,.settings-panel.open'};
+ const selectors={base:'.search-shell,.nav-card,.info-card,.widget-row.is-open,.rail-control:not(.home-edit-bar):is(:hover,:has(:focus-visible),.is-active)',overlay:'.detail-shell,.settings-panel.open'};
  const changing='.main-view,.secondary-view,.widget-row,.rail-control,.nav-section,.collapse-region';
  function surfaceRect(element,measure){
   const source=measure(element).rect;let left=Math.max(0,source.left),top=Math.max(0,source.top),right=Math.min(innerWidth,source.right),bottom=Math.min(innerHeight,source.bottom);

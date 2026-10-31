@@ -126,7 +126,16 @@
  const publicActions=new Set(['snapshot','refresh','preferences-get','preferences-set','open-account','clear-cache','logout','themes-get','themes-set','theme-draft','greeting-set','open-data','wallpaper-viewport','weather-details','semester-details','cc98-query','cc98-cancel','cc98-release','cc98-data-status']);
  async function handle(message,sender){
   await storageReady;
-  const action=message.action,own=trusted(sender);if(!own&&(!home(sender)||!publicActions.has(action)))throw E.problem('不允许此操作');
+  const action=message.action,own=trusted(sender);
+  if(action==='appearance-get'){
+   // This page may read display colors, not account data or editable configuration.
+   if(sender.id!==chrome.runtime.id||sender.url?.split('?')[0].split('#')[0]!==chrome.runtime.getURL('wallpaper-editor.html'))throw E.problem('不允许此操作');
+   const saved=await chrome.storage.local.get(['update1Themes','preferences']),state=HomeThemeCore.normalizeState(saved.update1Themes,saved.preferences);
+   const theme=state.themes.find(t=>t.id===state.activeId)||state.themes[0];
+   if(theme.id==='default'&&typeof HomeBingBackground!=='undefined'){const daily=await HomeBingBackground.peek();if(daily?.colors)theme.colors=daily.colors;}
+   return {colors:theme.colors,visuals:theme.visuals};
+  }
+  if(!own&&(!home(sender)||!publicActions.has(action)))throw E.problem('不允许此操作');
   if(action==='wallpaper-viewport'){
    if(!home(sender)||!Number.isInteger(sender.tab?.windowId))throw E.problem('请从首页读取窗口尺寸');
    const key=String(message.screen||'');if(!/^\d+x\d+@[\d.]+$/.test(key)||key.length>60)throw E.problem('屏幕参数无效');

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ZJUers 个人首页",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "description": "在 ZJUers 轻首页完整原站上应用个人界面，并将 Edge 新标签导向原站。",
   "permissions": [
     "storage",

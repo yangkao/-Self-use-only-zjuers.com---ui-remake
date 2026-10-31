@@ -13,7 +13,7 @@ node srcs/demo/server.cjs 8765 bin/demo
 
 打开 <http://127.0.0.1:8765/>。关闭终端或按 Ctrl+C 停止服务。不要直接双击 index.html：页面需要 HTTP 服务加载模块和模板。
 
-`bin/demo/` 是完整静态网站，`bin/zjuers-home-1.0.0-demo.zip` 解压后即为网站根目录。构建版本读取源目录的 `manifest.json`，公开构建输出到 `bin/demo/`。无需后台服务器，可以部署到 GitHub Pages 的项目子目录。已准备部署工作流，首次远端启用由维护者执行。搜索栏默认不透明度为30%，已有演示设置会一次性迁移到此值。
+`bin/demo/` 是完整静态网站，`bin/zjuers-home-1.1.2-demo.zip` 解压后即为网站根目录。构建版本读取源目录的 `manifest.json`，公开构建输出到 `bin/demo/`。无需后台服务器，可以部署到 GitHub Pages 的项目子目录。已准备部署工作流，首次远端启用由维护者执行。搜索栏默认不透明度为30%，已有演示设置会一次性迁移到此值。
 
 ## 示例范围
 

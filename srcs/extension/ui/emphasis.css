@@ -1,0 +1,136 @@
+/* Shared control states. Search and its engine menu intentionally keep nightTab styling. */
+@font-face{font-family:'ZJUers Josefin';src:url('media/JosefinSans.ttf') format('truetype');font-weight:100 700;font-display:swap}
+:root,:host,.app,.home-controls{
+ --soft-hover:0 0 12px 3px color-mix(in srgb,var(--theme-primary) 13%,transparent),0 0 24px color-mix(in srgb,var(--theme-primary) 5.5%,transparent);
+ --soft-focus:0 0 14px 5px color-mix(in srgb,var(--theme-primary) calc(var(--visual-focusGlow,20)*.9%),transparent),0 0 28px color-mix(in srgb,var(--theme-primary) calc(var(--visual-focusGlow,20)*.45%),transparent);
+ --soft-fill:color-mix(in srgb,var(--theme-primary) 8%,transparent);
+ --surface-rule:color-mix(in srgb,var(--theme-border) 22%,transparent);
+ --surface-highlight:inset 0 1px color-mix(in srgb,var(--theme-text) 7%,transparent);
+}
+/* Original component transitions remain authoritative; emphasis adds no timing. */
+:where(.app,.home-controls) :is(button,a,summary):not(:where(.search-shell *,.engine-menu *,.engine-select-menu *,.theme-tile,.widget-button,.rail-control-trigger,.nav-edit-toggle)):is(:hover,:focus-visible):not(:disabled):not([aria-disabled=true]){
+ background-color:var(--soft-fill)!important;border-color:transparent!important;box-shadow:var(--soft-hover)!important;color:var(--theme-text)!important;
+}
+:where(.app,.home-controls) :is(button,a,summary):not(:where(.search-shell *,.engine-menu *,.engine-select-menu *,.theme-tile,.widget-button,.rail-control-trigger,.nav-edit-toggle)):focus-visible:not(:disabled):not([aria-disabled=true]){
+ outline:0!important;box-shadow:var(--soft-focus)!important;
+}
+:where(.app,.home-controls) button:not(:where(.search-shell *,.engine-menu *,.engine-select-menu *,.theme-tile,.widget-button,.rail-control-trigger,.nav-edit-toggle)):is([aria-pressed=true],[aria-selected=true],[aria-checked=true],[aria-current=location],.selected,.active,.is-active){
+ color:var(--theme-text)!important;background-color:var(--soft-fill)!important;border-color:transparent!important;box-shadow:var(--soft-hover)!important;
+}
+/* Dense links keep their existing geometry and tiny lift, without the hard underline. */
+.app .link-grid a:is(:hover,:focus-visible){background:var(--soft-fill)!important;border-color:transparent!important;box-shadow:var(--soft-hover)!important}
+.app .link-grid a:focus-visible{box-shadow:var(--soft-focus)!important}
+.app .link-grid a:is(:hover,:focus-visible)::before{opacity:0}
+/* A source title can be an inline link; keep the glow local to that clickable text. */
+.app :is(.cc98-post-title,.card-top a,.live-row>a,.footer-about,.home-footer a){border-radius:4px}
+.app .cc98-card a:hover{text-decoration:none}
+.app .cc98-tabs .cc98-tab::after,.app .cc98-mobile-tabs button::after{opacity:0}
+.app :is(.settings-trigger,.card-controls .small-action):is(:hover,:focus-visible){filter:none}
+/* The open row is a reading surface; only the icon's hit area carries pinned glow. */
+.app .widget-row .widget-button:is(:hover,:focus-visible){color:var(--theme-accent);background:transparent}
+.app .widget-row .widget-button::before{
+ background:var(--soft-fill);box-shadow:var(--soft-hover);
+}
+.app .widget-row .widget-button:is(:hover,:focus-visible,[aria-pressed=true])::before{opacity:1;background:var(--soft-fill)}
+.app .widget-row .widget-button:focus-visible{outline:0;box-shadow:var(--soft-focus)}
+.app .rail-control .rail-control-trigger:is(:hover,:focus-visible,[aria-pressed=true]),
+.app .nav-edit-bar.is-editing .nav-edit-toggle{
+ color:var(--theme-accent);background:var(--soft-fill)!important;border-color:transparent!important;box-shadow:var(--soft-hover)!important;
+}
+.app .rail-control .rail-control-trigger:focus-visible{outline:0;box-shadow:var(--soft-focus)!important}
+.app .widget-rail .home-edit-bar{gap:0;padding:0;align-items:center}
+.app .widget-rail .home-edit-bar .nav-edit-toggle{transform:none}
+.app .widget-rail .home-edit-bar .nav-edit-detail{align-items:center}
+/* Editing reuses rail controls without adding a new WebGL-rendered surface. */
+.app[data-material=liquid] .home-edit-bar:is(:hover,:has(:focus-visible),.is-active){background:color-mix(in srgb,var(--theme-panel) var(--visual-widgetOpacity,50%),transparent)!important}
+/* Native form state stays intact: only its border/shadow changes. */
+:where(.app,.home-controls) :is(input,textarea,select):not(:where(.search-shell *,.engine-menu *,.engine-select-menu *)):hover:not(:disabled),
+:where(.app,.home-controls) .ui-select-trigger:hover:not(:disabled){
+ border-color:transparent!important;box-shadow:var(--soft-hover)!important;
+}
+:where(.app,.home-controls) :is(input,textarea,select):not(:where(.search-shell *,.engine-menu *,.engine-select-menu *)):is(:focus,:focus-visible):not(:disabled),
+:where(.app,.home-controls) .ui-select-trigger:is(:focus-visible,[aria-expanded=true]):not(:disabled){
+ outline:0!important;border-color:transparent!important;box-shadow:var(--soft-focus)!important;
+}
+:where(.app,.home-controls) .ui-select-menu:not(.engine-menu):not(.engine-select-menu) :is([role=option],[data-option]):is(:hover,[aria-selected=true],[data-focused=true]){
+ background:var(--soft-fill);border-color:transparent;box-shadow:var(--soft-hover);color:var(--theme-text);
+}
+/* Each theme owns its own highlight hue, independent of the active wallpaper. */
+.app .theme-tile{--soft-hover:0 0 12px 3px color-mix(in srgb,var(--tile-color) 13%,transparent),0 0 24px color-mix(in srgb,var(--tile-color) 5.5%,transparent);--soft-focus:0 0 14px 5px color-mix(in srgb,var(--tile-color) 18%,transparent),0 0 28px color-mix(in srgb,var(--tile-color) 9%,transparent)}
+.app .theme-tile:is(:hover,[aria-pressed=true]){box-shadow:var(--soft-hover)!important}
+.app .theme-tile:focus-visible{outline:0;box-shadow:var(--soft-focus)!important}
+/* Panel boundaries remain separate from local interaction glow. No new GL surfaces. */
+.app:not([data-material=liquid]) :is(.nav-card,.info-card){border-color:var(--surface-rule)}
+.app[data-material=blend] :is(.nav-card,.info-card,.widget-row.is-open,.rail-control:is(:hover,:has(:focus-visible),.is-active)){
+ box-shadow:var(--surface-highlight),0 8px 24px color-mix(in srgb,var(--theme-shadow) 16%,transparent);
+}
+.app :is(.nav-editor-menu,.ui-select-menu,.theme-context-menu,.widget-popover,.calendar-panel):not(.engine-menu):not(.engine-select-menu){
+ border-color:var(--surface-rule);box-shadow:var(--surface-highlight),0 10px 28px color-mix(in srgb,var(--theme-shadow) 28%,transparent);
+}
+.app :is(.settings-panel,.detail-shell,.nav-editor-dialog,.theme-rename-dialog){border-color:color-mix(in srgb,var(--theme-border) 30%,transparent)}
+:where(.app,.home-controls) :is(button,a,input,textarea,select,summary):not(:where(.search-shell *,.engine-menu *,.engine-select-menu *)):is(:disabled,[aria-disabled=true]){box-shadow:none!important;filter:none}
+.app .rail-control .rail-control-trigger:is(:disabled,[aria-disabled=true]),.app .theme-tile:is(:disabled,[aria-disabled=true]),:is(.app,.home-controls) .ui-select-trigger:is(:disabled,[aria-disabled=true]){box-shadow:none!important;filter:none}
+.app .widget-button:is(:disabled,[aria-disabled=true])::before{box-shadow:none!important}
+/* Release only fully expanded animation wrappers; text ellipsis and closed folds stay clipped. */
+.app .home-ink-unclipped{overflow:visible!important}
+.app .settings-tree-group{overflow:visible}
+/* Move clipping edges into existing whitespace, keeping rail content at its old coordinates. */
+.app .widget-rail{
+ --ink-left:min(24px,var(--rail-gap,48px));--ink-right:min(24px,var(--rail-right,24px));
+ box-sizing:content-box;padding:24px var(--ink-right) 16px var(--ink-left);
+ margin:-24px calc(-1 * var(--ink-right)) -16px calc(-1 * var(--ink-left));scroll-padding:24px;
+}
+/* Scroll panels keep their boundaries; the inner gutter leaves room around edge controls. */
+.app :is(.nav-editor-menu,.widget-popover,.calendar-panel){padding:24px;scroll-padding:24px}
+:where(.app,.home-controls) .ui-select-menu:not(.engine-select-menu){padding:24px;scroll-padding:24px}
+.app .nav-editor-menu{min-width:222px}
+.app .nav-icon-grid{padding:24px;margin:8px -15px 0;max-height:260px;scroll-padding:24px}
+.app .live-content{padding:12px 24px;margin:-12px -12px -12px -24px;max-height:384px;scroll-padding:24px}
+.app .cc98-card .cc98-scroll{padding:24px;scroll-padding:24px}
+/* Approved controls revision: quiet control edges; surfaces and data dividers remain. */
+:where(.app,.home-controls) button:not(:where(.search-shell *,.engine-menu *,.engine-select-menu *,.theme-tile,.semester-course,.detail-day,.cc98-message,.cc98-conversation-item)){
+ border-color:transparent!important;
+}
+:where(.app,.home-controls) :is(input,textarea,select):not(:where(.search-shell *,.engine-menu *,.engine-select-menu *,[type=range],[type=color],[type=checkbox],[type=radio],[aria-invalid=true],:user-invalid)),
+:where(.app,.home-controls) .ui-select-trigger{border-color:transparent!important}
+:where(.app,.home-controls) :is(input,textarea,select):is([aria-invalid=true],:user-invalid){border-color:var(--theme-accent)!important}
+/* Preserve the original native range interaction, with space around its end stops. */
+:where(.app,.home-controls) input[type=range]{
+ appearance:none;-webkit-appearance:none;box-sizing:border-box;height:40px!important;min-height:40px!important;
+ padding:10px 12px!important;border:1px solid transparent!important;border-radius:8px;
+ background:color-mix(in srgb,var(--theme-card) 55%,transparent);accent-color:var(--theme-primary);
+}
+:where(.app,.home-controls) input[type=range]::-webkit-slider-runnable-track{height:4px;border:0;border-radius:4px;background:color-mix(in srgb,var(--theme-muted) 28%,var(--theme-search))}
+:where(.app,.home-controls) input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;margin-top:-5px;border:0;border-radius:50%;background:var(--theme-text);box-shadow:0 0 8px color-mix(in srgb,var(--theme-primary) 18%,transparent)}
+:where(.app,.home-controls) input[type=range]::-moz-range-track{height:4px;border:0;border-radius:4px;background:color-mix(in srgb,var(--theme-muted) 28%,var(--theme-search))}
+:where(.app,.home-controls) input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:var(--theme-text)}
+/* The number input stays native; its surrounding field carries the focus halo. */
+:where(.app,.home-controls) .ui-number>input[type=number]:is(:hover,:focus,:focus-visible){background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline:0!important}
+:is(.app,.home-controls) .ui-number .ui-number-actions>button:is(:hover,:focus-visible){box-shadow:none!important}
+:is(.app,.home-controls) .ui-number.is-disabled{box-shadow:none!important}
+:is(.app,.home-controls) .ui-number:has(>input:is([aria-invalid=true],:user-invalid)){border-color:var(--theme-accent)!important}
+/* Local reading/clicking space, retaining the existing dense navigation geometry. */
+.app .widget-entry{padding:7px 8px}
+.app .cc98-card .cc98-post-title{padding:4px 8px;margin:-4px -6px;border-radius:5px}
+:where(.app,.home-controls) .palette-advanced summary{padding:7px 9px;margin-left:-9px;margin-right:-9px;border-radius:5px}
+.app .calendar-day{border-color:transparent!important;background:transparent!important}
+.app .calendar-day.today{font-weight:700;color:var(--theme-accent)}
+.app .calendar-day.selected{background:var(--soft-fill)!important;box-shadow:var(--soft-hover);color:var(--theme-text)}
+.app .schedule-card.calendar-open{overflow:visible;z-index:5}
+.app .calendar-panel{max-width:calc(100vw - 48px)}
+/* Each document supplies its own 24px ink space; compensate outside, never clip it away. */
+.app .settings-section:has(>.protected-settings-frame,>.wallpaper-editor-frame){display:flow-root;overflow:visible}
+.app :is(.protected-settings-frame,.wallpaper-editor-frame){display:block;width:calc(100% + 48px);max-width:none;margin:-24px}
+/* The directory has its own scroll clip in addition to the surrounding forum pane. */
+.app .cc98-card .cc98-directory{padding:24px;margin:-14px -22px;max-height:448px;scroll-padding:24px}
+/* Stronger local emphasis, not a wider or longer animation. */
+.app .link-grid a,.app .widget-row .widget-button,.app .rail-control-trigger{
+ --soft-hover:0 0 12px 3px color-mix(in srgb,var(--theme-primary) 22%,transparent),0 0 24px color-mix(in srgb,var(--theme-primary) 10%,transparent);
+ --soft-focus:0 0 14px 5px color-mix(in srgb,var(--theme-primary) calc(var(--visual-focusGlow,20)*1.4%),transparent),0 0 28px color-mix(in srgb,var(--theme-primary) calc(var(--visual-focusGlow,20)*.7%),transparent);
+ --soft-fill:color-mix(in srgb,var(--theme-primary) 12%,transparent);
+}
+.app .widget-button[aria-pressed=true]{--soft-hover:0 0 12px 3px color-mix(in srgb,var(--theme-primary) 26%,transparent),0 0 24px color-mix(in srgb,var(--theme-primary) 12%,transparent);--soft-fill:color-mix(in srgb,var(--theme-primary) 14%,transparent)}
+@media(max-width:650px){.app .settings-content{padding-inline:24px}}
+@media(prefers-reduced-motion:reduce){
+ :where(.app,.home-controls) :is(button,a,input,textarea,select,summary):not(:where(.search-shell *,.engine-menu *,.engine-select-menu *)),.app .widget-button::before{transition:none!important}
+}

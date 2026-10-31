@@ -16,7 +16,6 @@ test('formal package has no legacy external migration channel',()=>{
  const m=JSON.parse(fs.readFileSync(path.join(base,'manifest.json'),'utf8'));assert.match(m.version,/^\d+\.\d+\.\d+$/);assert.equal(m.externally_connectable,undefined);assert.equal(m.options_page,'account.html');assert.equal(fs.existsSync(path.join(base,'migration.js')),false);
 });
 test('public desktop source carries no development review forms or migration imports',()=>{
- const m=JSON.parse(fs.readFileSync(path.join(base,'manifest.json'),'utf8'));if(m.version!=='1.0.0')return;
  for(const name of ['migration.html','migration.js','cc98-preview.html','ui/components-preview.html'])assert.equal(fs.existsSync(path.join(base,name)),false,name);
  assert.doesNotMatch(fs.readFileSync(path.join(base,'background.js'),'utf8'),/importScripts\('migration.js'\)/);
  assert.doesNotMatch(fs.readFileSync(path.join(base,'account.html'),'utf8'),/cc98-preview/);

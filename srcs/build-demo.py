@@ -50,7 +50,7 @@ from urllib.parse import urljoin
 for links in navigation.values():
     for item in links:item['href']=urljoin('https://zjuers.com/',item['href'])
 (TARGET/'navigation.json').write_text(json.dumps(navigation,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-head='<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../app/ui/controls.css"><link rel="stylesheet" href="../app/account.css"><style>html,body{background:transparent}body{margin:0;padding:4px}main{padding:4px;max-width:none;margin:0}input:disabled{opacity:.6}p{line-height:1.8}</style></head>'
+head='<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../app/ui/controls.css"><link rel="stylesheet" href="../app/account.css"><link rel="stylesheet" href="../app/ui/emphasis.css"><style>html,body{background:transparent}html.demo-embedded{overflow:hidden;padding:24px;background:transparent}body{margin:0;padding:0;display:flow-root}main{padding:0;max-width:none;margin:0}input:disabled{opacity:.6}p{line-height:1.8}</style></head>'
 frames={
  'account':'<main><h2 id="title"></h2><p>在线演示 · 以下项目只展示结构，不收集真实凭据。</p><div id="fields" class="field-grid single"></div><p id="summary"></p><button disabled>请安装正式扩展后配置</button></main>',
  'data':'<main><h2>演示本地数据</h2><p>此页只保存演示网站的导航、主题与组件设置，不访问扩展存储。正式配置导入导出请在安装版中使用。</p><button id="reset">恢复演示默认设置</button></main>',
@@ -60,7 +60,9 @@ frames={
 (TARGET/'frames').mkdir()
 for kind,body in frames.items():
     scripts=''.join(f'<script src="../app/{name}.js"></script>' for name in ['theme-core','palette-sampling','palette-editor'] if (SOURCE/(name+'.js')).is_file()) if kind=='editor' else ''
-    (TARGET/'frames'/(kind+'.html')).write_text(head+f'<body data-frame="{kind}">'+body+scripts+'<script src="../frame.js"></script></body></html>',encoding='utf-8')
+    controls='<script src="../app/ui/controls.js"></script>' if kind!='thumbnail' else ''
+    initialize='<script>HomeControls.initialize(document)</script>' if controls else ''
+    (TARGET/'frames'/(kind+'.html')).write_text(head+f'<body class="home-controls" data-frame="{kind}">'+body+scripts+controls+'<script src="../frame.js"></script>'+initialize+'</body></html>',encoding='utf-8')
 (TARGET/'.nojekyll').write_text('',encoding='utf-8')
 for p in TARGET.rglob('*.js'):subprocess.run(['node','--check',str(p)],check=True,capture_output=True)
 files=sorted(p for p in TARGET.rglob('*') if p.is_file())

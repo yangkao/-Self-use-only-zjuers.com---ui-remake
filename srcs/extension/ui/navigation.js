@@ -9,10 +9,10 @@
  const make=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
  function initialize(root,context,hooks){
   const nav=root.getElementById('navigation'),app=root.querySelector('.app');let state=context.navigationState,groups=context.groups,editing=false,busy=false,drag=null,formOrigin=null,renderKey='';
-  const bar=make('div',undefined,'nav-edit-bar preview-control'),toggle=make('button','编辑主界面','nav-edit-toggle'),add=make('button','＋ 一级栏目','nav-edit-add'),notice=make('output','','nav-edit-notice');
+  const bar=make('div',undefined,'nav-edit-bar rail-control preview-control'),toggle=make('button','编辑主界面','nav-edit-toggle rail-control-trigger'),add=make('button','＋ 一级栏目','nav-edit-add'),notice=make('output','','nav-edit-notice');
   toggle.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.3 14.1 6.2 17.8 9.9 6.7 21H3ZM15.2 5.1l1.9-1.9a1 1 0 0 1 1.4 0l2.3 2.3a1 1 0 0 1 0 1.4l-1.9 1.9Z"/></svg>';
   toggle.title='编辑主界面';toggle.setAttribute('aria-label',toggle.title);add.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';add.title='新增一级栏目';add.setAttribute('aria-label',add.title);
-  toggle.type=add.type='button';toggle.setAttribute('aria-pressed','false');add.inert=true;notice.setAttribute('role','status');const editDetail=make('div',undefined,'nav-edit-detail'),editLabel=make('button','编辑主界面','nav-edit-label');editLabel.type='button';editLabel.onclick=()=>toggle.click();editDetail.append(editLabel,add);bar.append(editDetail,toggle,notice);root.getElementById('mainView').append(bar);
+  toggle.type=add.type='button';toggle.setAttribute('aria-pressed','false');add.inert=true;notice.setAttribute('role','status');const editDetail=make('div',undefined,'nav-edit-detail rail-control-detail'),editLabel=make('button','编辑主界面','nav-edit-label');editLabel.type='button';editLabel.onclick=()=>toggle.click();editDetail.append(editLabel,add);bar.append(editDetail,toggle,notice);root.getElementById('mainView').append(bar);
   const menu=make('div',undefined,'nav-editor-menu preview-control');menu.hidden=true;menu.setAttribute('role','menu');app.append(menu);
   const overlay=make('div',undefined,'nav-editor-overlay preview-control');overlay.hidden=true;
   const form=make('form',undefined,'nav-editor-dialog');form.setAttribute('role','dialog');form.setAttribute('aria-modal','true');form.setAttribute('aria-labelledby','nav-dialog-title');overlay.append(form);app.append(overlay);
@@ -38,10 +38,11 @@
    return wrap;
   }
   function syncMode(){
-   nav.classList.toggle('is-editing',editing);bar.classList.toggle('is-editing',editing);add.inert=!editing;
-   nav.querySelectorAll('.nav-inline-controls').forEach(e=>e.inert=!editing);
+   nav.classList.toggle('is-editing',editing);bar.classList.toggle('is-editing',editing);bar.classList.toggle('is-active',editing);add.inert=!editing;
+   nav.querySelectorAll('.nav-inline-controls').forEach(e=>{e.inert=!editing;root.__homeControlsApi?.expansionInk(e,e.querySelector('.nav-control-row'),editing);});
+   nav.querySelectorAll('.nav-edit-heading').forEach(e=>root.__homeControlsApi?.expansionInk(e,e,editing));
    nav.querySelectorAll('.section-header,.card-title,[data-drag-handle],a[data-nav-kind]').forEach(e=>e.draggable=editing);
-   for(const section of nav.querySelectorAll('.nav-section')){const collapsed=!editing&&context.prefs.remember&&state.folds[section.dataset.navId]===true;section.classList.toggle('is-collapsed',collapsed);section.querySelector('.collapse-region').inert=collapsed;const b=section.querySelector('.collapse-button');b.disabled=editing;b.setAttribute('aria-expanded',String(!collapsed));b.setAttribute('aria-label',(collapsed?'展开':'折叠')+section.querySelector('.section-title').textContent);}
+   for(const section of nav.querySelectorAll('.nav-section')){const collapsed=!editing&&context.prefs.remember&&state.folds[section.dataset.navId]===true;section.classList.toggle('is-collapsed',collapsed);section.querySelector('.collapse-region').inert=collapsed;root.__homeControlsApi?.expansionInk(section.querySelector('.collapse-region'),section.querySelector('.collapse-inner'),!collapsed);const b=section.querySelector('.collapse-button');b.disabled=editing;b.setAttribute('aria-expanded',String(!collapsed));b.setAttribute('aria-label',(collapsed?'展开':'折叠')+section.querySelector('.section-title').textContent);}
   }
   function render(){
    const key=JSON.stringify(groups);

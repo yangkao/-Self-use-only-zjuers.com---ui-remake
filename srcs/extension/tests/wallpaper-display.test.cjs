@@ -11,7 +11,7 @@ function fixture(resolveURL){
  const elements=new Map(),media=[],revoked=[],timers=new Set();let readyCount=0;
  function element(tag='div'){
   const listeners=new Map();
-  return {tagName:tag.toUpperCase(),style:{},classList:{add(){},remove(){}},clientWidth:100,value:'#123456',
+  return {tagName:tag.toUpperCase(),style:{setProperty(){}},dataset:{},classList:{add(){},remove(){}},clientWidth:100,value:'#123456',
    replaceChildren(...children){this.children=children;},getBoundingClientRect:()=>({height:100}),
    addEventListener(type,fn){if(!listeners.has(type))listeners.set(type,new Set());listeners.get(type).add(fn);},
    removeEventListener(type,fn){listeners.get(type)?.delete(fn);},
@@ -28,7 +28,7 @@ function fixture(resolveURL){
   ResizeObserver:class {observe(){}},getComputedStyle:()=>({color:''}),
   setTimeout(fn,delay){const timer=setTimeout(()=>{timers.delete(timer);fn();},delay);timers.add(timer);return timer;},
   clearTimeout(timer){clearTimeout(timer);timers.delete(timer);},
-  HomeThemeCore:{defaultTheme:()=>({visuals:{scale:100,brightness:1,grayscale:0}})},
+  HomeThemeCore:{defaultTheme:()=>({visuals:{scale:100,brightness:1,grayscale:0}})},HomeAppearance:require('../ui/appearance.js'),
   HomePaletteEditor:{create:()=>({cancel(){},update(){},mediaReady(){readyCount++;},destroy(){}})},
   HomeFileHandles:{url:resolveURL},chrome:{storage:{onChanged:{addListener(){},removeListener(){}}}}
  });
