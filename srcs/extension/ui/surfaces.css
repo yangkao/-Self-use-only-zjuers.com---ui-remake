@@ -26,8 +26,19 @@
 .app[data-material=blend] .settings-panel :is(.custom-input:not([type=range]):not([type=color]),.custom-button,.setting-button){background-color:color-mix(in srgb,var(--theme-card) 72%,var(--theme-panel));border-color:color-mix(in srgb,var(--theme-border) 24%,transparent)}
 .app[data-material=blend] .settings-panel :is(.custom-button,.setting-button):hover{background-color:color-mix(in srgb,var(--theme-hover) 25%,var(--theme-panel));border-color:color-mix(in srgb,var(--theme-accent) 50%,transparent)}
 .app[data-material=liquid] :is(.settings-panel,.detail-shell){background:color-mix(in srgb,var(--theme-panel) 78%,transparent);backdrop-filter:blur(14px);border-color:color-mix(in srgb,var(--theme-border) 45%,transparent)}
-.app:is([data-material=blend],[data-material=liquid]) :is(.ui-select-menu,.engine-menu,.theme-context-menu,.nav-context-menu,.widget-popover,.calendar-panel){background:color-mix(in srgb,var(--theme-panel) 92%,transparent);backdrop-filter:blur(12px);border-color:color-mix(in srgb,var(--theme-border) 45%,transparent)}
+.app:is([data-material=blend],[data-material=liquid]) :is(.engine-menu,.ui-select-menu.engine-select-menu){background:color-mix(in srgb,var(--theme-panel) 92%,transparent);backdrop-filter:blur(12px);border-color:color-mix(in srgb,var(--theme-border) 45%,transparent)}
 .app[data-material=liquid] .wallpaper iframe{filter:none!important;transform:none!important;transition:none!important}
 .surface-status{position:fixed;bottom:10px;left:12px;z-index:180;max-width:min(440px,calc(100vw - 24px));font-size:11px;line-height:1.5;color:var(--theme-muted);background:var(--theme-panel);padding:7px 10px;border-radius:6px}
 .surface-status[hidden]{display:none}
 @media(prefers-reduced-motion:reduce){.app:is([data-material=blend],[data-material=liquid]) .search-shell{transition:none}}
+
+/* Shared CSS floating surfaces. Small overlays do not create WebGL canvases. */
+:root,.app{--floating-opacity:90%;--floating-filter:none;--floating-highlight:inset 0 1px color-mix(in srgb,var(--theme-text) 6%,transparent)}
+:root:is([data-material=blend],[data-material=liquid]),.app:is([data-material=blend],[data-material=liquid]){--floating-opacity:78%;--floating-filter:blur(12px) saturate(1.05)}
+:is(.app,.home-controls) :is(.greeting,.nav-tooltip,.nav-editor-menu,.nav-editor-dialog,.nav-icon-grid,.widget-popover,.widget-toast,.ui-select-menu,.calendar-panel,.theme-context-menu,.theme-rename-dialog,.wallpaper-error-box,.surface-status,.bing-status,.course-peek):not(.engine-menu):not(.engine-select-menu){
+ background:color-mix(in srgb,var(--theme-panel) var(--floating-opacity),transparent);
+ backdrop-filter:var(--floating-filter);-webkit-backdrop-filter:var(--floating-filter);
+ box-shadow:var(--floating-highlight),0 10px 28px color-mix(in srgb,var(--theme-shadow) 24%,transparent);
+}
+.app:is([data-material=blend],[data-material=liquid]) .widget-edit-row{background:color-mix(in srgb,var(--theme-panel) var(--visual-widgetOpacity,50%),transparent);backdrop-filter:blur(5px) saturate(1.05);box-shadow:var(--surface-highlight)}
+.app .bing-status{position:fixed;bottom:10px;left:12px;z-index:180;max-width:min(440px,calc(100vw - 24px));padding:7px 10px;border-radius:6px;font-size:11px;line-height:1.5;color:var(--theme-muted)}

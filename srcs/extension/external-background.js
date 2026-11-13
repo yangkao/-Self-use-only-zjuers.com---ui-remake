@@ -117,7 +117,7 @@
  }
  async function persistConfig(){await chrome.storage.local.set({privateConfig:config});}
  async function clear(keys){store.clear(keys);await writes;await chrome.storage.local.set({externalCache:structuredClone(store.entries)});}
- function trusted(sender){return sender.id===chrome.runtime.id&&['account.html','data.html'].some(page=>sender.url?.split('?')[0].split('#')[0]===chrome.runtime.getURL(page));}
+  function trusted(sender){return sender.id===chrome.runtime.id&&['account.html','data.html'].some(page=>sender.url?.split('?')[0].split('#')[0]===chrome.runtime.getURL(page));}
  function home(sender){try{const u=new URL(sender.url);return sender.id===chrome.runtime.id&&u.origin==='https://zjuers.com'&&['/','/index.html'].includes(u.pathname)&&sender.frameId===0;}catch{return false;}}
  async function notifyThemes(skipTabId){
   if(!chrome.tabs.query||!chrome.tabs.sendMessage)return;
@@ -129,11 +129,11 @@
   const action=message.action,own=trusted(sender);
   if(action==='appearance-get'){
    // This page may read display colors, not account data or editable configuration.
-   if(sender.id!==chrome.runtime.id||sender.url?.split('?')[0].split('#')[0]!==chrome.runtime.getURL('wallpaper-editor.html'))throw E.problem('不允许此操作');
+    if(sender.id!==chrome.runtime.id||!['wallpaper-editor.html','account.html','data.html','sources.html','diagnostics.html'].some(page=>sender.url?.split('?')[0].split('#')[0]===chrome.runtime.getURL(page)))throw E.problem('不允许此操作');
    const saved=await chrome.storage.local.get(['update1Themes','preferences']),state=HomeThemeCore.normalizeState(saved.update1Themes,saved.preferences);
    const theme=state.themes.find(t=>t.id===state.activeId)||state.themes[0];
    if(theme.id==='default'&&typeof HomeBingBackground!=='undefined'){const daily=await HomeBingBackground.peek();if(daily?.colors)theme.colors=daily.colors;}
-   return {colors:theme.colors,visuals:theme.visuals};
+    return {colors:theme.colors,visuals:theme.visuals,material:theme.material};
   }
   if(!own&&(!home(sender)||!publicActions.has(action)))throw E.problem('不允许此操作');
   if(action==='wallpaper-viewport'){

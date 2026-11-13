@@ -4,7 +4,8 @@ import argparse, hashlib, json, os, shutil, subprocess, zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--source',default='srcs/extension',help='Extension source relative to the project root')
+CURRENT='srcs/update3/extension' if (ROOT/'srcs/update3/extension/manifest.json').is_file() else 'srcs/extension'
+parser.add_argument('--source',default=CURRENT,help='Extension source relative to the project root')
 parser.add_argument('--output',default='bin/demo',help='Isolated generated demo directory under bin/')
 args=parser.parse_args()
 SOURCE=(ROOT/args.source).resolve()
@@ -37,7 +38,11 @@ for p in list((SOURCE/'ui').rglob('*'))+list((SOURCE/'assets').rglob('*'))+list(
             text=text.replace("url.replace(/\\/$/,'')+'/message'",'url')
         dest.write_text(text,encoding='utf-8')
     elif p.name=='sources.html':
-        dest.write_text(p.read_text(encoding='utf-8').replace('href="account.html"','href="../frames/account.html"'),encoding='utf-8')
+        text=p.read_text(encoding='utf-8').replace('href="account.html"','href="../frames/account.html"')
+        import re
+        text=re.sub(r'<script src="(?:theme-core|ui/appearance|protected-frame)\.js"></script>','',text)
+        text=text.replace('</body>','<script src="../sources-theme.js"></script></body>')
+        dest.write_text(text,encoding='utf-8')
     else:shutil.copyfile(p,dest)
 for name in ['runtime.js','index.html']:
     p=TARGET/name;p.write_text(p.read_text(encoding='utf-8').replace('__DEMO_VERSION__',VERSION).replace('0.4.0</h2>',VERSION+'</h2>'),encoding='utf-8')
@@ -50,7 +55,7 @@ from urllib.parse import urljoin
 for links in navigation.values():
     for item in links:item['href']=urljoin('https://zjuers.com/',item['href'])
 (TARGET/'navigation.json').write_text(json.dumps(navigation,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-head='<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../app/ui/controls.css"><link rel="stylesheet" href="../app/account.css"><link rel="stylesheet" href="../app/ui/emphasis.css"><style>html,body{background:transparent}html.demo-embedded{overflow:hidden;padding:24px;background:transparent}body{margin:0;padding:0;display:flow-root}main{padding:0;max-width:none;margin:0}input:disabled{opacity:.6}p{line-height:1.8}</style></head>'
+head='<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../app/ui/controls.css"><link rel="stylesheet" href="../app/account.css"><link rel="stylesheet" href="../app/ui/surfaces.css"><link rel="stylesheet" href="../app/ui/emphasis.css"><style>html,body{background:transparent}html.demo-embedded{overflow:hidden;padding:24px;background:transparent}body{margin:0;padding:0;display:flow-root}main{padding:0;max-width:none;margin:0}input:disabled{opacity:.6}p{line-height:1.8}</style></head>'
 frames={
  'account':'<main><h2 id="title"></h2><p>在线演示 · 以下项目只展示结构，不收集真实凭据。</p><div id="fields" class="field-grid single"></div><p id="summary"></p><button disabled>请安装正式扩展后配置</button></main>',
  'data':'<main><h2>演示本地数据</h2><p>此页只保存演示网站的导航、主题与组件设置，不访问扩展存储。正式配置导入导出请在安装版中使用。</p><button id="reset">恢复演示默认设置</button></main>',
@@ -59,7 +64,7 @@ frames={
 }
 (TARGET/'frames').mkdir()
 for kind,body in frames.items():
-    scripts=''.join(f'<script src="../app/{name}.js"></script>' for name in ['theme-core','palette-sampling','palette-editor'] if (SOURCE/(name+'.js')).is_file()) if kind=='editor' else ''
+    scripts=''.join(f'<script src="../app/{name}.js"></script>' for name in (['theme-core','ui/appearance','palette-sampling','palette-editor'] if kind=='editor' else ['theme-core','ui/appearance']) if (SOURCE/(name+'.js')).is_file())
     controls='<script src="../app/ui/controls.js"></script>' if kind!='thumbnail' else ''
     initialize='<script>HomeControls.initialize(document)</script>' if controls else ''
     (TARGET/'frames'/(kind+'.html')).write_text(head+f'<body class="home-controls" data-frame="{kind}">'+body+scripts+controls+'<script src="../frame.js"></script>'+initialize+'</body></html>',encoding='utf-8')

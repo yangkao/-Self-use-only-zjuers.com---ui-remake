@@ -9,6 +9,6 @@ for(const name of ['NotAllowedError','SecurityError','AbortError'])test(`embedde
  vm.runInContext(fs.readFileSync(path.join(__dirname,'../wallpaper-editor.js'),'utf8'),context);
  get('choose').onclick();assert.equal(invoked,1);await new Promise(setImmediate);
  assert.equal(tabs.length,name==='AbortError'?0:1);
- if(tabs.length){const appearance=JSON.parse(new URL(tabs[0].url).searchParams.get('appearance'));assert.deepEqual(Object.keys(appearance).sort(),['colors','visuals']);}
+ if(tabs.length){const appearance=JSON.parse(new URL(tabs[0].url).searchParams.get('appearance'));assert.deepEqual(Object.keys(appearance).sort(),['colors','material','visuals']);}
  assert.match(get('status').textContent,name==='AbortError'?/已取消/:/不允许此内嵌窗口/);
 });

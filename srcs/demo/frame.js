@@ -7,9 +7,9 @@
  if(kind!=='thumbnail')document.documentElement.classList.add('demo-embedded');
  const sendHeight=()=>{const style=getComputedStyle(document.documentElement);post({type:kind==='editor'?'EDITOR_HEIGHT':'SETTINGS_HEIGHT',height:Math.ceil(document.body.getBoundingClientRect().height+parseFloat(style.paddingTop)+parseFloat(style.paddingBottom))});};
  function colors(c){for(const [key,value]of Object.entries(c||{}))if(/^#[0-9a-f]{6}$/i.test(value))document.documentElement.style.setProperty('--theme-'+key,value);document.documentElement.dataset.themeReady='true';}
- colors(D.theme().themes.find(t=>t.id===D.theme().activeId).colors);
+ const initial=D.theme().themes.find(t=>t.id===D.theme().activeId);HomeAppearance.apply(initial,document.documentElement);
  new ResizeObserver(sendHeight).observe(document.body);document.addEventListener('keydown',e=>{if(e.key==='Escape')post({type:'SETTINGS_ESCAPE'});});
- window.addEventListener('message',e=>{if(e.source!==parent||e.origin!==origin)return;if(e.data?.type==='SETTINGS_THEME')colors(e.data.colors);});
+ window.addEventListener('message',e=>{if(e.source!==parent||e.origin!==origin)return;if(e.data?.type==='SETTINGS_THEME')HomeAppearance.apply(e.data,document.documentElement);});
  const make=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n;};
  if(kind==='account'){
   const section=new URL(location.href).searchParams.get('section')||'weather',descriptions={weather:['和风天气','API Host','API Key','显示地点'],campus:['浙大统一身份认证','学号','密码'],webvpn:['WebVPN','用户名','密码'],cc98:['CC98','应用 ID']},[title,...fields]=descriptions[section]||descriptions.weather;

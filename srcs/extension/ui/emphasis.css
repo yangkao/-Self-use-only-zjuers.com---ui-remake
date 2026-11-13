@@ -60,14 +60,14 @@
 .app .theme-tile:is(:hover,[aria-pressed=true]){box-shadow:var(--soft-hover)!important}
 .app .theme-tile:focus-visible{outline:0;box-shadow:var(--soft-focus)!important}
 /* Panel boundaries remain separate from local interaction glow. No new GL surfaces. */
-.app:not([data-material=liquid]) :is(.nav-card,.info-card){border-color:var(--surface-rule)}
+.app:not([data-material=liquid]) :is(.nav-card,.info-card){border-color:transparent}
 .app[data-material=blend] :is(.nav-card,.info-card,.widget-row.is-open,.rail-control:is(:hover,:has(:focus-visible),.is-active)){
  box-shadow:var(--surface-highlight),0 8px 24px color-mix(in srgb,var(--theme-shadow) 16%,transparent);
 }
 .app :is(.nav-editor-menu,.ui-select-menu,.theme-context-menu,.widget-popover,.calendar-panel):not(.engine-menu):not(.engine-select-menu){
- border-color:var(--surface-rule);box-shadow:var(--surface-highlight),0 10px 28px color-mix(in srgb,var(--theme-shadow) 28%,transparent);
+  border-color:transparent;box-shadow:var(--surface-highlight),0 10px 28px color-mix(in srgb,var(--theme-shadow) 28%,transparent);
 }
-.app :is(.settings-panel,.detail-shell,.nav-editor-dialog,.theme-rename-dialog){border-color:color-mix(in srgb,var(--theme-border) 30%,transparent)}
+.app :is(.settings-panel,.detail-shell,.nav-editor-dialog,.theme-rename-dialog){border-color:transparent}
 :where(.app,.home-controls) :is(button,a,input,textarea,select,summary):not(:where(.search-shell *,.engine-menu *,.engine-select-menu *)):is(:disabled,[aria-disabled=true]){box-shadow:none!important;filter:none}
 .app .rail-control .rail-control-trigger:is(:disabled,[aria-disabled=true]),.app .theme-tile:is(:disabled,[aria-disabled=true]),:is(.app,.home-controls) .ui-select-trigger:is(:disabled,[aria-disabled=true]){box-shadow:none!important;filter:none}
 .app .widget-button:is(:disabled,[aria-disabled=true])::before{box-shadow:none!important}
@@ -131,6 +131,11 @@
 }
 .app .widget-button[aria-pressed=true]{--soft-hover:0 0 12px 3px color-mix(in srgb,var(--theme-primary) 26%,transparent),0 0 24px color-mix(in srgb,var(--theme-primary) 12%,transparent);--soft-fill:color-mix(in srgb,var(--theme-primary) 14%,transparent)}
 @media(max-width:650px){.app .settings-content{padding-inline:24px}}
+/* Decorative outlines retired after the complete control audit. Data separators,
+   focus/error states, crop frames and palette rings retain their meaning. */
+.app :is(.nav-card,.info-card,.settings-panel,.detail-shell,.greeting,.nav-tooltip,.nav-editor-menu,.nav-editor-dialog,.nav-icon-grid,.widget-edit-row,.widget-popover,.widget-toast,.calendar-panel,.theme-context-menu,.theme-rename-dialog,.wallpaper-error-box,.surface-status,.bing-status,.course-peek,.semester-course,.forecast-day){border-color:transparent!important}
+:is(.app,.home-controls) .ui-select-menu:not(.engine-menu):not(.engine-select-menu){border-color:transparent!important}
+.app.theme-custom :is(.greeting,.nav-tooltip,.nav-editor-menu,.nav-editor-dialog,.nav-icon-grid,.widget-popover,.widget-toast,.calendar-panel,.theme-context-menu,.theme-rename-dialog,.wallpaper-error-box,.surface-status,.bing-status,.course-peek){background:color-mix(in srgb,var(--theme-panel) var(--floating-opacity),transparent)}
 @media(prefers-reduced-motion:reduce){
  :where(.app,.home-controls) :is(button,a,input,textarea,select,summary):not(:where(.search-shell *,.engine-menu *,.engine-select-menu *)),.app .widget-button::before{transition:none!important}
 }

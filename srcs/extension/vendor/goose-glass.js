@@ -9072,7 +9072,6 @@ void main(){ vec2 v = vec2((gl_VertexID<<1)&2, gl_VertexID&2);
         if (!this._dbg) this._dbg = {};
         if (!this._dbg.downOnce) {
           this._dbg.downOnce = true;
-          console.log("[lg-debug] down hitId=", hit == null ? void 0 : hit.id, "hasDrag=", hasDrag);
         }
         this._gestures.set(e.pointerId, {
           pressedId: hit ? hit.id : null,
@@ -9159,7 +9158,6 @@ void main(){ vec2 v = vec2((gl_VertexID<<1)&2, gl_VertexID&2);
           if (hasDrag && !((_f = this._dbg) == null ? void 0 : _f.dragOnce)) {
             this._dbg = this._dbg || {};
             this._dbg.dragOnce = true;
-            console.log("[lg-debug] pending\u2192drag id=", id, "onDragType=", typeof ((_h = (_g = this._interactions) == null ? void 0 : _g[id]) == null ? void 0 : _h.onDrag));
           }
           const isShapeButton = !hasDrag && (hitEl == null ? void 0 : hitEl.kind) === "glass-shape" && (hitEl == null ? void 0 : hitEl.isInteractive) && !!((_j = (_i = this._interactions) == null ? void 0 : _i[id]) == null ? void 0 : _j.onTap);
           if (hasDrag) {

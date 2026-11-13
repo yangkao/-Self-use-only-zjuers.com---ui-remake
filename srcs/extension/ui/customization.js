@@ -31,7 +31,7 @@
    app.style.setProperty('--visual-displayFont',`"${v.displayFont}", "Microsoft YaHei", sans-serif`);app.style.setProperty('--visual-uiFont',`"${v.uiFont}", "Microsoft YaHei", sans-serif`);
    getComputedStyle(app).color;
    app.classList.remove('theme-applying');
-   for(const frame of area.querySelectorAll('.protected-settings-frame'))if(frame.getAttribute('src'))frame.contentWindow.postMessage({type:'SETTINGS_THEME',colors:c,font:v.uiFont,visuals:v},new URL(frame.src).origin);
+   for(const frame of area.querySelectorAll('.protected-settings-frame'))if(frame.getAttribute('src'))frame.contentWindow.postMessage({type:'SETTINGS_THEME',colors:c,font:v.uiFont,visuals:v,material:theme.material},new URL(frame.src).origin);
   }
   let viewport={ratio:innerWidth/innerHeight,measured:false},viewportTimer;
   async function updateViewport(){try{const result=await call('wallpaper-viewport',{width:document.documentElement.clientWidth||innerWidth,height:innerHeight,screen:`${screen.availWidth}x${screen.availHeight}@${devicePixelRatio}`});viewport=result.measured?result:{ratio:innerWidth/innerHeight,measured:false};const frame=area.querySelector('.wallpaper-editor-frame');if(frame)frame.contentWindow.postMessage({type:'EDITOR_VIEWPORT',...viewport},new URL(frame.src).origin);}catch{/* Standalone tests and unsupported window contexts retain an explicitly uncalibrated preview. */}}

@@ -32,7 +32,7 @@
     else {if(f){observer?.unobserve(f);retained.delete(f.dataset.page);}node.remove();}
    }
   }
-  function sendTheme(f){const t=root.__customize.getTheme();f.contentWindow.postMessage({type:'SETTINGS_THEME',colors:t.colors,font:t.visuals.uiFont,visuals:t.visuals},new URL(f.src).origin);}
+  function sendTheme(f){const t=root.__customize.getTheme();f.contentWindow.postMessage({type:'SETTINGS_THEME',colors:t.colors,font:t.visuals.uiFont,visuals:t.visuals,material:t.material},new URL(f.src).origin);}
   function render(){if(!opened)return;if(rendering)return;mounted=true;rendering=true;const scroll=content.scrollTop;try{
    clearContent();root.getElementById('settingsTitle').textContent=groups[current][0];root.getElementById('settingsKicker').textContent=groups[current][1];
    if(current==='home'){

@@ -7,7 +7,7 @@
  function normalize(value){
   const fallback=Core.defaultTheme(),colors={...fallback.colors},input=value?.colors;
   for(const key of Object.keys(colors))if(typeof input?.[key]==='string'&&/^#[0-9a-f]{6}$/i.test(input[key]))colors[key]=input[key].toLowerCase();
-  return {colors,visuals:Core.normalizeVisuals(value?.visuals)};
+  return {colors,visuals:Core.normalizeVisuals(value?.visuals),material:['current','blend','liquid'].includes(value?.material)?value.material:fallback.material};
  }
  function encode(value){return JSON.stringify(normalize(value));}
  function decode(value){if(typeof value!=='string'||value.length>12000)return null;try{const data=JSON.parse(value);return data&&typeof data==='object'&&data.colors?normalize(data):null;}catch{return null;}}
@@ -17,6 +17,7 @@
   element.style.setProperty('--visual-focusGlow',String(look.visuals.focusGlow));
   element.style.setProperty('--visual-menuDuration',look.visuals.menuDuration+'ms');
   element.style.setProperty('font-family','"'+look.visuals.uiFont+'", DengXian, "Microsoft YaHei UI", sans-serif');
+  element.dataset.material=look.material;
   if(options.reveal!==false)element.dataset.themeReady='true';
   return look;
  }

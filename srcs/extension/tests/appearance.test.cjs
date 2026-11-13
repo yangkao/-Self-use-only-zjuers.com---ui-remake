@@ -8,7 +8,7 @@ test('appearance round trip retains default Bing colors without exporting local 
  theme.password='secret';theme.token='secret';theme.visuals.uiFont='Segoe UI';
  const before=JSON.stringify(theme),encoded=Appearance.encode(theme),look=Appearance.decode(encoded);
  assert.equal(look.colors.primary,'#126789');assert.equal(look.visuals.uiFont,'Segoe UI');
- assert.deepEqual(Object.keys(look).sort(),['colors','visuals']);
+ assert.deepEqual(Object.keys(look).sort(),['colors','material','visuals']);
  assert.doesNotMatch(encoded,/PRIVATE_FILE|private-reference|secret|password|token|wallpaper/);
  assert.equal(JSON.stringify(theme),before);
 });
@@ -24,6 +24,13 @@ test('appearance application changes CSS only and can defer reveal',()=>{
  const values=new Map(),root={style:{setProperty:(k,v)=>values.set(k,v)},dataset:{}};
  const look=Appearance.apply({colors:{primary:'#13579b'}},root,{reveal:false});
  assert.equal(root.dataset.themeReady,undefined);assert.equal(values.get('--theme-primary'),'#13579b');
+ assert.equal(root.dataset.material,'blend');
  assert.equal(values.get('--visual-focusGlow'),'20');assert.ok(values.get('font-family').includes('ZJUers Josefin'));
  Appearance.apply(look,root);assert.equal(root.dataset.themeReady,'true');
+});
+
+test('appearance preserves a validated material without leaking theme identity',()=>{
+ const look=Appearance.decode(Appearance.encode({...Core.defaultTheme(),material:'liquid',id:'private-theme',name:'private-name'}));
+ assert.equal(look.material,'liquid');assert.equal(look.id,undefined);assert.equal(look.name,undefined);
+ assert.equal(Appearance.normalize({material:'invalid'}).material,'blend');
 });

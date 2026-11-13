@@ -45,8 +45,9 @@
    svg.setAttribute('viewBox','0 0 150 120');shape('circle',{cx:100,cy:40,r:38},'weather-orb');shape('rect',{x:56,y:65,width:84,height:24,rx:12},'weather-cloud-shadow');shape('rect',{x:3,y:39,width:96,height:36,rx:18},'weather-cloud-back');shape('rect',{x:22,y:48,width:102,height:42,rx:21},'weather-cloud-front');return svg;
   }
   if(!cloudy){if(night)shape('path',{d:'M92 15a39 39 0 1 0 30 61 38 38 0 0 1-30-61Z'},'weather-orb');else shape('circle',{cx:80,cy:56,r:38},'weather-orb');return svg;}
-  if(night&&/云/.test(text)&&!/阴|雨|雷|雪/.test(text))shape('path',{d:'M109 4a34 34 0 1 0 28 52 33 33 0 0 1-28-52Z'},'weather-orb');
-  shape('rect',{x:68,y:13,width:64,height:32,rx:16},'weather-cloud-top');
+   const nightCloudy=night&&/云/.test(text)&&!/阴|雨|雷|雪/.test(text);
+   if(nightCloudy)shape('path',{d:'M109 4a34 34 0 1 0 28 52 33 33 0 0 1-28-52Z',transform:'translate(22 -3)'},'weather-orb');
+   shape('rect',{x:nightCloudy?52:68,y:13,width:64,height:32,rx:16},'weather-cloud-top');
   shape('rect',{x:20,y:35,width:96,height:36,rx:18},'weather-cloud-back');
   shape('rect',{x:47,y:50,width:105,height:38,rx:19},'weather-cloud-front');
   const mixed=/雨夹雪|雨雪/.test(text),heavy=/大雨|暴雨/.test(text),thunder=/雷/.test(text);

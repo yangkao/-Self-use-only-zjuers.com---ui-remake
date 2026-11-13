@@ -1,6 +1,8 @@
 # 开发与构建
 
-1.0.0 组件由 `ui/controls.*`、`ui/surfaces.css` 和 `ui/glass-surface.js` 管理；`cc98-core.js` 负责分页／字段／配额，`ui/cc98-*` 与 `ui/cc98.js` 管理共享视图状态。`palette-sampling.js` 将媒体采样与配色派生分离。
+公开源码中的扩展位于 `srcs/extension/`。构建命令在公开源码树根目录执行，输出到 `bin/release/`；开发所需数据均为合成样本，不需要私人素材和账号。
+
+组件由 `ui/controls.*`、`ui/emphasis.css`、`ui/surfaces.css` 和 `ui/glass-surface.js` 管理；`cc98-core.js` 负责分页／字段／配额，`ui/cc98-*` 与 `ui/cc98.js` 管理共享视图状态。`palette-sampling.js` 将媒体采样与配色派生分离。
 
 公开源码含 `srcs/demo/`、`srcs/build-demo.py`、`tests/demo.test.cjs` 和 Pages 工作流。执行 `python srcs/build-demo.py` 后，在项目根运行 `python -m http.server 8000`，访问 `/bin/demo/`。源码包内的 `srcs/build-release.py` 使用固定 ZIP 时间戳，包含扩展、演示、工作流及公开 `docs/`；不含 AI 过程文档。
 

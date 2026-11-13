@@ -1,6 +1,6 @@
 # ZJUers 个人首页
 
-面向 Microsoft Edge 的个人起始页扩展。基于 [ZJUers 轻首页](https://zjuers.com/)完整页面及「ZJUers 轻首页美化」调整导航、视觉和交互，加入主题、次级信息界面与小组件。当前桌面版本 **1.1.2**，远端版本与在线演示以实际发布结果为准。移动端适配尚未完成可行性验证，列为未来更新方向。
+面向 Microsoft Edge 的个人起始页扩展。基于 [ZJUers 轻首页](https://zjuers.com/)完整页面及「ZJUers 轻首页美化」调整导航、视觉和交互，加入主题、次级信息界面与小组件。当前桌面版本 **1.1.3**，远端版本与在线演示以实际发布结果为准。移动端适配尚未完成可行性验证，列为未来更新方向。
 
 <p align="center">
   <a href="https://yangkao.github.io/-Self-use-only-zjuers.com---ui-remake/">
@@ -57,7 +57,7 @@
 
 ## 安装与使用
 
-下载 Release 中的 **`zjuers-home-1.1.2.zip`**，解压后在 `edge://extensions/` 开启开发人员模式，选择「加载解压缩的扩展」，选中包含 `manifest.json` 的目录。
+下载 Release 中的 **`zjuers-home-1.1.3.zip`**，解压后在 `edge://extensions/` 开启开发人员模式，选择「加载解压缩的扩展」，选中包含 `manifest.json` 的目录。
 
 首次安装使用默认设置，**没有预置账号、密码、天气 Key、令牌、个人本地壁纸或配置备份**。CC98 应用 ID 是公开标识符，保留默认值；其他账号授权能力尚未经跨账号验证，也可填写自己的应用 ID。
 
@@ -67,14 +67,16 @@
 
 ## 开发
 
-仅需要已有的 Python 3.11+、Node.js 22+，无需 npm 安装或 Git LFS。
+Python 3.11+、Node.js 22+ 为现有开发条件，无需 npm 安装或 Git LFS。
+
+以下命令在公开源码树根目录执行，发布构建会运行测试和文件检查。
 
 ```powershell
 node --test srcs/extension/tests/*.test.cjs tests/*.test.cjs
 python srcs/build-release.py
 ```
 
-产物位于 `bin/release/`。`srcs/extension/` 是完整源码与测试；构建不读取个人浏览器配置，也不依赖项目外媒体、原始参考素材或临时目录。
+产物位于 `bin/release/`。构建不读取个人浏览器配置。
 
 ## 已知限制
 

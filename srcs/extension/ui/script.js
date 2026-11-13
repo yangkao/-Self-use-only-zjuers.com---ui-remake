@@ -43,10 +43,10 @@ const settings = {
   themes: {kicker:'LOCAL THEMES',title:'主题与壁纸',body:''},
   visual: {kicker:'VISUAL',title:'视觉',body:''},
   greeting: {kicker:'GREETING',title:'问候',body:''},
-  campus: { kicker: 'CAMPUS SERVICES', title: '校内服务', body: `<p class="empty-state">正在初始化真实数据界面…</p>` },
-  weather: { kicker: 'WEATHER', title: '天气', body: `<p class="empty-state">正在初始化真实数据界面…</p>` },
+  campus: { kicker: 'CAMPUS SERVICES', title: '校内服务', body: `<p class="empty-state">正在加载信息…</p>` },
+  weather: { kicker: 'WEATHER', title: '天气', body: `<p class="empty-state">正在加载信息…</p>` },
   appearance: { kicker: 'APPEARANCE', title: '搜索与界面', body: `<section class="settings-section"><h3 class="settings-section-title">搜索</h3><div class="setting-row"><div>默认搜索引擎<small>主界面仍可即时切换</small></div><select class="setting-select" aria-label="默认搜索引擎"><option>Bing</option><option>Google</option><option>必应学术</option></select></div></section><section class="settings-section"><h3 class="settings-section-title">导航</h3><div class="setting-row"><div>记住分组折叠状态<small>首次打开时所有分组默认展开</small></div><button class="setting-button" type="button">关闭</button></div><div class="setting-row"><span>恢复全部展开</span><button class="setting-button" type="button">恢复</button></div></section>` },
-  data: { kicker: 'DATA & ABOUT', title: '数据与关于', body: `<p class="empty-state">正在初始化真实数据界面…</p>` }
+  data: { kicker: 'DATA & ABOUT', title: '数据与关于', body: `<p class="empty-state">正在加载信息…</p>` }
 };
 
 const body = root.querySelector('.app');
@@ -61,7 +61,7 @@ function setMainInert(value) {
   root.querySelector('.freshman-guide').inert=value;
 }
 function openSecondary() { secondary.prepend(topbar);body.classList.add('is-secondary'); secondary.inert=false; secondary.setAttribute('aria-hidden','false'); setMainInert(true); root.dispatchEvent(new CustomEvent('home-secondary-open')); }
-function closeSecondary() { if (panel.classList.contains('open')) return;topbarAnchor.after(topbar); body.classList.remove('is-secondary'); secondary.inert=true; secondary.setAttribute('aria-hidden','true'); setMainInert(false); }
+function closeSecondary() { if (panel.classList.contains('open')) return;topbarAnchor.after(topbar); body.classList.remove('is-secondary'); secondary.inert=true; secondary.setAttribute('aria-hidden','true'); setMainInert(false); root.dispatchEvent(new CustomEvent('home-secondary-close')); }
 function openSettings() { root.__settingsRouter?.open();panel.classList.add('open'); panel.inert=false; panel.setAttribute('aria-hidden','false'); backdrop.hidden = false; secondary.inert=true;root.getElementById('settingsClose').focus(); }
 function closeSettings() { root.__settingsRouter?.close();panel.classList.remove('open'); panel.inert=true; panel.setAttribute('aria-hidden','true'); backdrop.hidden = true; secondary.inert=false;root.getElementById('settingsTrigger').focus(); }
 secondary.inert=true;panel.inert=true;

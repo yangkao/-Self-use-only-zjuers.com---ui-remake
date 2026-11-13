@@ -12,7 +12,14 @@ test('wallpaper authorization reads appearance only, with no storage writes or p
  t.colors.primary='#118866';t.wallpaper={type:'video',path:'PRIVATE_LOCAL_FILE'};state.themes.push(t);state.activeId=t.id;h.data.update1Themes=state;
  const url='chrome-extension://test/wallpaper-editor.html?request=fixture',reply=await h.send({type:'HOME_EXTERNAL',action:'appearance-get'},url);
  assert.equal(reply.ok,true);assert.equal(reply.value.colors.primary,'#118866');assert.equal(h.writes,0);
- assert.deepEqual(Object.keys(reply.value).sort(),['colors','visuals']);assert.doesNotMatch(JSON.stringify(reply),/secret-|PRIVATE_LOCAL_FILE|wallpaper|username/);
+ assert.deepEqual(Object.keys(reply.value).sort(),['colors','material','visuals']);assert.doesNotMatch(JSON.stringify(reply),/secret-|PRIVATE_LOCAL_FILE|wallpaper|username/);
+ for(const page of ['sources.html','diagnostics.html']){
+  const sender='chrome-extension://test/'+page;
+  const appearance=await h.send({type:'HOME_EXTERNAL',action:'appearance-get'},sender);
+  assert.equal(appearance.ok,true);assert.equal(appearance.value.colors.primary,'#118866');
+  assert.doesNotMatch(JSON.stringify(appearance),/secret-|PRIVATE_LOCAL_FILE|wallpaper|username/);
+  for(const action of ['configuration','portable-export','themes-get','save-webvpn'])assert.equal((await h.send({type:'HOME_EXTERNAL',action},sender)).ok,false);
+ }
  for(const action of ['save-webvpn','portable-export','themes-set'])assert.equal((await h.send({type:'HOME_EXTERNAL',action},url)).ok,false);
  for(const invalid of ['https://zjuers.com/','chrome-extension://test/other.html','https://evil.test/'])assert.equal((await h.send({type:'HOME_EXTERNAL',action:'appearance-get'},invalid)).ok,false);
  assert.equal(h.writes,0);
